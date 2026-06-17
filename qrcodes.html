@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>在线考试 - 微信扫码</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f1f5f9;min-height:100vh;padding:20px}
+h1{text-align:center;color:#1e293b;margin-bottom:20px;font-size:1.3rem}
+.cards{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;max-width:800px;margin:0 auto}
+.card{background:#fff;border-radius:16px;padding:28px 22px;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.08);max-width:320px;flex:1;min-width:280px}
+.card h2{font-size:1.05rem;margin-bottom:12px}
+.card.green h2{color:#166534}.card.orange h2{color:#9a3412}
+.card img{width:200px;height:200px;display:block;margin:0 auto 12px}
+.url{background:#f1f5f9;border-radius:8px;padding:8px 12px;font-size:.7rem;color:#64748b;word-break:break-all;margin:8px 0}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.72rem;font-weight:600;margin-bottom:8px}
+.badge.green{background:#dcfce7;color:#166534}
+.badge.orange{background:#fff7ed;color:#c2410c}
+.note{font-size:.72rem;color:#94a3b8;margin-top:6px}
+</style>
+</head>
+<body>
+<h1>📱 微信扫码 · 在线考试</h1>
+<div class="cards">
+<div class="card green">
+<span class="badge green">🥗 公共营养师</span>
+<h2>公共营养师在线考试</h2>
+<img id="qr1" src="" alt="QR">
+<div class="url">xt221886.github.io/ggyyys-exam/</div>
+<div class="note">100题 · 120分钟 · 60分及格</div>
+</div>
+<div class="card orange">
+<span class="badge orange">🏥 中医康复理疗</span>
+<h2>中医康复理疗在线考试</h2>
+<img id="qr2" src="" alt="QR">
+<div class="url">xt221886.github.io/ggyyys-exam/tcm-exam.html</div>
+<div class="note">100题 · 120分钟 · 60分及格</div>
+</div>
+</div>
+<div style="text-align:center;margin-top:20px;font-size:.75rem;color:#94a3b8">
+管理后台：admin.html（营养师） / admin-tcm.html（中医）
+</div>
+<script>
+['https://xt221886.github.io/ggyyys-exam/','https://xt221886.github.io/ggyyys-exam/tcm-exam.html'].forEach((url,i)=>{
+var img=document.getElementById('qr'+(i+1));
+img.src='https://api.qrserver.com/v1/create-qr-code/?size=200x200&color='+(i===0?'16a34a':'c2410c')+'&data='+encodeURIComponent(url);
+});
+</script>
+</body>
+</html>
