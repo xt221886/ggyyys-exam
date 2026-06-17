@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>中医康复理疗在线考试</title>
+<style>
+:root {
+  --primary-50: #fff7ed; --primary-100: #ffedd5; --primary-200: #fed7aa;
+  --primary-400: #fb923c; --primary-500: #f97316; --primary-600: #ea580c;
+  --primary-700: #c2410c; --primary-800: #9a3412;
+  --red-500: #ef4444; --red-600: #dc2626;
+  --amber-500: #f59e0b;
+  --slate-50: #f8fafc; --slate-100: #f1f5f9; --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1; --slate-400: #94a3b8; --slate-500: #64748b;
+  --slate-600: #475569; --slate-700: #334155; --slate-800: #1e293b; --slate-900: #0f172a;
+  --white: #fff;
+  --radius: 12px; --radius-lg: 16px; --radius-sm: 8px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;-webkit-tap-highlight-color:transparent}
+body{font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;background:#fff7ed;color:var(--slate-800);min-height:100vh;min-height:100dvh;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(249,115,22,.08) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 90%,rgba(234,88,12,.05) 0%,transparent 60%);pointer-events:none;z-index:0}
+.app-container{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:16px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+.card{background:var(--white);border-radius:var(--radius-lg);padding:24px 20px;box-shadow:0 4px 14px rgba(0,0,0,.08);border:1px solid var(--slate-100)}
+.app-header{text-align:center;padding:28px 16px 20px}
+.app-logo{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;background:linear-gradient(135deg,var(--primary-500),var(--primary-600));border-radius:16px;margin-bottom:12px;font-size:28px;box-shadow:0 8px 24px rgba(249,115,22,.3)}
+.app-title{font-size:1.5rem;font-weight:700;color:var(--slate-900);letter-spacing:.02em}
+.app-subtitle{font-size:.85rem;color:var(--slate-500);margin-top:4px}
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:.88rem;font-weight:600;color:var(--slate-700);margin-bottom:6px}
+.form-label .required{color:var(--red-500);margin-left:2px}
+.form-input{width:100%;height:48px;border:2px solid var(--slate-200);border-radius:var(--radius);padding:0 14px;font-size:1rem;color:var(--slate-800);background:var(--slate-50);transition:all .2s;outline:none;-webkit-appearance:none}
+.form-input:focus{border-color:var(--primary-500);background:var(--white);box-shadow:0 0 0 4px rgba(249,115,22,.1)}
+.form-input.error{border-color:var(--red-500);background:#fef2f2}
+.form-error{font-size:.78rem;color:var(--red-500);margin-top:4px;display:none}
+.form-error.show{display:block}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:50px;padding:0 28px;border:none;border-radius:var(--radius);font-size:1rem;font-weight:600;cursor:pointer;transition:all .25s;-webkit-tap-highlight-color:transparent;user-select:none}
+.btn:active{transform:scale(.97)}
+.btn-primary{width:100%;background:linear-gradient(135deg,var(--primary-500),var(--primary-600));color:#fff;box-shadow:0 4px 14px rgba(249,115,22,.35);font-size:1.05rem;letter-spacing:.04em}
+.btn-outline{background:var(--white);color:var(--primary-700);border:2px solid var(--primary-200)}
+.btn-outline:hover{background:var(--primary-50)}
+.btn-sm{height:38px;padding:0 16px;font-size:.85rem;border-radius:var(--radius-sm)}
+.btn-submit{width:100%;background:linear-gradient(135deg,var(--primary-500),var(--primary-600));color:#fff;box-shadow:0 4px 14px rgba(249,115,22,.35);font-size:1.05rem;letter-spacing:.04em;margin-top:8px}
+
+.timer-bar-wrap{position:sticky;top:0;z-index:100;background:var(--white);padding:12px 16px;border-radius:0 0 var(--radius-lg) var(--radius-lg);box-shadow:0 12px 32px rgba(0,0,0,.12);display:flex;align-items:center;gap:12px;margin:-16px -16px 16px;border-bottom:1px solid var(--slate-100)}
+.timer-icon{font-size:1.4rem;flex-shrink:0}
+.timer-info{flex:1;min-width:0}
+.timer-label{font-size:.72rem;color:var(--slate-500);text-transform:uppercase;letter-spacing:.05em}
+.timer-display{font-family:'SF Mono','Fira Code','Consolas',monospace;font-size:1.3rem;font-weight:700;color:var(--slate-900)}
+.timer-display.warning{color:var(--amber-500);animation:blink 1s infinite}
+.timer-display.danger{color:var(--red-500);animation:blink .5s infinite}
+@keyframes blink{50%{opacity:.4}}
+.timer-progress-wrap{flex-shrink:0;width:52px;height:52px;position:relative}
+.timer-progress-ring{transform:rotate(-90deg);width:52px;height:52px}
+.timer-progress-ring circle{fill:none;stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .5s}
+.timer-ring-bg{stroke:var(--slate-100)}
+.timer-ring-fg{stroke:var(--primary-500)}
+.timer-ring-fg.warning{stroke:var(--amber-500)}
+.timer-ring-fg.danger{stroke:var(--red-500)}
+.timer-percent{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--slate-600)}
+
+.progress-bar-wrap{background:var(--slate-100);border-radius:99px;height:6px;margin-bottom:20px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary-500),var(--primary-400));border-radius:99px;transition:width .4s}
+
+.question-number{display:inline-flex;align-items:center;gap:6px;background:var(--primary-50);color:var(--primary-700);font-size:.8rem;font-weight:700;padding:4px 12px;border-radius:99px;margin-bottom:12px}
+.question-text{font-size:1.05rem;font-weight:600;color:var(--slate-900);line-height:1.7;margin-bottom:20px}
+.options-list{display:flex;flex-direction:column;gap:10px}
+.option-item{position:relative;display:flex;align-items:center;gap:12px;padding:14px 16px;border:2px solid var(--slate-200);border-radius:var(--radius);cursor:pointer;transition:all .2s;background:var(--white);-webkit-tap-highlight-color:transparent;user-select:none}
+.option-item:active{transform:scale(.985)}
+.option-item:hover{border-color:var(--primary-400);background:var(--primary-50)}
+.option-item.selected{border-color:var(--primary-500);background:linear-gradient(135deg,#fff7ed,#ffedd5);box-shadow:0 0 0 4px rgba(249,115,22,.08)}
+.option-letter{flex-shrink:0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--slate-100);color:var(--slate-600);font-weight:700;font-size:.9rem;transition:all .2s}
+.option-item.selected .option-letter{background:var(--primary-500);color:#fff;box-shadow:0 4px 12px rgba(249,115,22,.3)}
+.option-text{flex:1;font-size:.95rem;color:var(--slate-700);line-height:1.5}
+
+.nav-buttons{display:flex;gap:10px;margin-top:24px}
+.nav-buttons .btn{flex:1}
+
+.question-grid-toggle{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.85rem;color:var(--primary-600);font-weight:600;cursor:pointer;padding:10px;margin-top:12px;user-select:none}
+.question-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:12px;padding:12px;background:var(--slate-50);border-radius:var(--radius);max-height:0;overflow:hidden;transition:all .35s;opacity:0}
+.question-grid.open{max-height:400px;opacity:1;padding:12px}
+.grid-dot{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);font-size:.7rem;font-weight:700;cursor:pointer;background:var(--white);border:1.5px solid var(--slate-200);color:var(--slate-500);transition:all .15s;-webkit-tap-highlight-color:transparent}
+.grid-dot.answered{background:var(--primary-100);border-color:var(--primary-300);color:var(--primary-700)}
+.grid-dot.current{background:var(--primary-500);border-color:var(--primary-500);color:#fff;box-shadow:0 2px 8px rgba(249,115,22,.4)}
+
+.page{display:none;flex:1;flex-direction:column}
+.page.active{display:flex}
+.page.centered{justify-content:center}
+.app-footer{text-align:center;padding:20px 16px;font-size:.75rem;color:var(--slate-400)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal-box{background:var(--white);border-radius:20px;padding:28px 24px;margin:20px;max-width:360px;width:100%;text-align:center;box-shadow:0 20px 48px rgba(0,0,0,.16);transform:translateY(20px);transition:transform .3s}
+.modal-overlay.show .modal-box{transform:translateY(0)}
+.modal-title{font-size:1.1rem;font-weight:700;color:var(--slate-900);margin-bottom:8px}
+.modal-desc{font-size:.88rem;color:var(--slate-500);margin-bottom:20px;line-height:1.5}
+.modal-buttons{display:flex;gap:10px}
+.modal-buttons .btn{flex:1}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--slate-300);border-radius:99px}
+
+@media(max-width:380px){.card{padding:18px 14px}.app-title{font-size:1.3rem}.question-text{font-size:.98rem}.option-item{padding:12px 14px}.question-grid{grid-template-columns:repeat(8,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+
+  <!-- PAGE 1: LOGIN -->
+  <div class="page active centered" id="page-login">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="app-header">
+        <div class="app-logo">🏥</div>
+        <h1 class="app-title">中医康复理疗在线考试</h1>
+        <p class="app-subtitle">TCM Rehabilitation Therapy Exam</p>
+      </div>
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">姓  名 <span class="required">*</span></label>
+          <input class="form-input" id="inputName" type="text" placeholder="请输入您的真实姓名" maxlength="30" autocomplete="name">
+          <div class="form-error" id="errName">请输入姓名</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">身份证号 <span class="required">*</span></label>
+          <input class="form-input" id="inputId" type="text" placeholder="请输入18位身份证号码" maxlength="18" autocomplete="off">
+          <div class="form-error" id="errId">请输入正确的18位身份证号</div>
+        </div>
+        <button class="btn btn-primary" onclick="startExam()">开 始 考 试</button>
+      </div>
+      <div style="text-align:center;margin-top:16px;font-size:.8rem;color:var(--slate-400);">
+        📋 共 100 题 · 满分 100 分 · 考试时间 120 分钟<br>
+        及格线 60 分 · 全部为单项选择题
+      </div>
+    </div>
+    <div class="app-footer">中医康复理疗在线考试系统 © 2026</div>
+  </div>
+
+  <!-- PAGE 2: EXAM -->
+  <div class="page" id="page-exam">
+    <div class="timer-bar-wrap" id="timerBar">
+      <span class="timer-icon">⏱️</span>
+      <div class="timer-info">
+        <div class="timer-label">剩余时间</div>
+        <div class="timer-display" id="timerDisplay">120:00</div>
+      </div>
+      <div class="timer-progress-wrap">
+        <svg class="timer-progress-ring" viewBox="0 0 52 52">
+          <circle class="timer-ring-bg" cx="26" cy="26" r="22"/>
+          <circle class="timer-ring-fg" id="timerRing" cx="26" cy="26" r="22" stroke-dasharray="138.23" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-percent" id="timerPercent">100%</div>
+      </div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="card" style="flex:1;">
+      <div class="question-number" id="qNumber">第 1 题</div>
+      <div class="question-text" id="qText"></div>
+      <div class="options-list" id="optionsList"></div>
+      <div class="nav-buttons">
+        <button class="btn btn-outline btn-sm" id="btnPrev" onclick="prevQuestion()">◀ 上一题</button>
+        <button class="btn btn-outline btn-sm" id="btnNext" onclick="nextQuestion()">下一题 ▶</button>
+      </div>
+      <div class="question-grid-toggle" onclick="toggleGrid()">
+        <span id="gridToggleIcon">📋</span> <span id="gridToggleText">答题卡</span>
+      </div>
+      <div class="question-grid" id="questionGrid"></div>
+      <button class="btn btn-submit" style="margin-top:16px;" onclick="showSubmitConfirm()">✅ 交卷</button>
+    </div>
+  </div>
+
+  <!-- PAGE 3: SUBMITTED -->
+  <div class="page centered" id="page-results">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:64px;margin-bottom:12px;">✅</div>
+        <div style="font-size:1.3rem;font-weight:700;color:var(--primary-700);margin-bottom:4px;">考试已提交</div>
+        <div style="font-size:.9rem;color:#64748b;margin-bottom:20px;">您的答卷已成功提交，成绩将在后台审核后公布。</div>
+        <div style="background:var(--primary-50);border-radius:12px;padding:16px;margin-bottom:16px;text-align:left;font-size:.82rem;color:#475569;line-height:1.6;">
+          📋 <strong>考生信息</strong><br>
+          <span id="submittedName" style="color:#94a3b8;">—</span><br>
+          ⏱️ <span id="submittedTime" style="color:#94a3b8;">—</span>
+        </div>
+        <button class="btn btn-primary" style="margin-top:4px;" onclick="restartExam()">🔄 重新考试</button>
+      </div>
+    </div>
+    <div class="app-footer">中医康复理疗在线考试系统 © 2026</div>
+  </div>
+
+  <!-- SUBMIT MODAL -->
+  <div class="modal-overlay" id="submitModal">
+    <div class="modal-box">
+      <div style="font-size:2.5rem;margin-bottom:8px;">⚠️</div>
+      <div class="modal-title">确认交卷？</div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-buttons">
+        <button class="btn btn-outline btn-sm" onclick="hideSubmitConfirm()">继续答题</button>
+        <button class="btn btn-primary btn-sm" style="background:var(--red-500);box-shadow:0 4px 14px rgba(239,68,68,.35);" onclick="submitExam()">确认交卷</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════ 中医康复理疗题库 (100题) ═══════════════
+const QUESTIONS = [
+  // ── 中医基础理论 (1-15) ──
+  {q:"中医理论体系的基本特点是？",opts:["整体观念和辨证论治","阴阳学说和五行学说","藏象学说和经络学说","气血津液学说"],ans:0},
+  {q:"阴阳学说中，"阴中有阳，阳中有阴"体现了阴阳的什么特性？",opts:["对立制约","互根互用","消长平衡","相互转化"],ans:1},
+  {q:"五行中，木的特性是？",opts:["曲直","炎上","稼穑","从革"],ans:0},
+  {q:"下列哪项属于"六淫"外感病邪？",opts:["痰饮","瘀血","风邪","食积"],ans:2},
+  {q:"心在五行中属于？",opts:["木","火","土","金"],ans:1},
+  {q:"气的生理功能不包括？",opts:["推动作用","温煦作用","固摄作用","造血作用"],ans:3},
+  {q:"血的主要生理功能是？",opts:["营养和滋润","推动和兴奋","防御和抵抗","固摄和收敛"],ans:0},
+  {q:"下列哪项属于奇恒之腑？",opts:["胃","小肠","脑","大肠"],ans:2},
+  {q:"中医四诊中，望诊主要是观察？",opts:["听声音","问病史","切脉搏","神、色、形、态"],ans:3},
+  {q:""寒者热之"属于何种治法？",opts:["正治","反治","标本兼治","急则治标"],ans:0},
+  {q:"五脏中，主运化水谷精微的是？",opts:["心","肝","脾","肺"],ans:2},
+  {q:"肺的主要生理功能是？",opts:["主血脉","主气、司呼吸","主运化","主藏精"],ans:1},
+  {q:"肾的主要生理功能是？",opts:["主神明","主疏泄","藏精、主水、主纳气","主统血"],ans:2},
+  {q:"肝的主要生理功能是？",opts:["主血脉","主运化","主气","主疏泄、主藏血"],ans:3},
+  {q:"七情致病中，怒伤什么脏腑？",opts:["心","肝","脾","肺"],ans:1},
+
+  // ── 经络腧穴 (16-30) ──
+  {q:"人体有多少条正经经脉？",opts:["8条","10条","12条","14条"],ans:2},
+  {q:"手太阴经所属的脏腑是？",opts:["心","肝","肺","肾"],ans:2},
+  {q:"足三里穴位于？",opts:["上肢","下肢","腹部","背部"],ans:1},
+  {q:"督脉被称为？",opts:["阴脉之海","阳脉之海","血海","水谷之海"],ans:1},
+  {q:"下列哪个穴位属于手阳明大肠经？",opts:["太渊","合谷","足三里","三阴交"],ans:1},
+  {q:"腧穴的分类不包括？",opts:["经穴","奇穴","阿是穴","络穴"],ans:3},
+  {q:"合谷穴的主治作用不包括？",opts:["头痛","牙痛","面瘫","腹泻"],ans:3},
+  {q:"足太阳膀胱经的循行主要经过？",opts:["上肢内侧","下肢后侧","腹部正中","头部前额"],ans:1},
+  {q:"八会穴中的"血会"是指？",opts:["膻中","膈俞","大杼","中脘"],ans:1},
+  {q:"列缺穴属于哪条经络？",opts:["手太阴肺经","手阳明大肠经","足阳明胃经","足太阴脾经"],ans:0},
+  {q:"人体经络系统由什么组成？",opts:["经脉和络脉","动脉和静脉","神经和血管","骨骼和肌肉"],ans:0},
+  {q:"太渊穴位于？",opts:["腕部","踝部","膝部","肘部"],ans:0},
+  {q:"三阴交穴位于？",opts:["上肢","下肢内侧","腹部","背部"],ans:1},
+  {q:"风池穴归属于哪条经络？",opts:["手太阳小肠经","足少阳胆经","足太阳膀胱经","手少阳三焦经"],ans:1},
+  {q:"任脉的主要生理功能是？",opts:["调节诸阳经","调节诸阴经","调节十二经","调节奇经八脉"],ans:1},
+
+  // ── 推拿按摩 (31-45) ──
+  {q:"推拿手法的基本要求是？",opts:["持久、有力、均匀、柔和","快速、用力、随意","轻柔、缓慢、间断","刚猛、有力、快速"],ans:0},
+  {q:"下列哪种属于摆动类手法？",opts:["按法","揉法","拿法","拍法"],ans:1},
+  {q:"推拿时常用的介质不包括？",opts:["滑石粉","按摩乳","酒精","生姜汁"],ans:2},
+  {q:"颈椎病的推拿治疗原则是？",opts:["强力旋转","舒筋活络、理筋整复","仅用针刺","卧床不动"],ans:1},
+  {q:"下列哪种情况适合推拿治疗？",opts:["骨折未愈合","局部急性炎症","落枕","恶性肿瘤"],ans:2},
+  {q:"推拿按摩中的"拿法"主要作用于？",opts:["皮肤表层","肌肉丰厚处","骨骼关节","内脏器官"],ans:1},
+  {q:"腰椎间盘突出症的推拿治疗禁忌是？",opts:["慢性腰痛","中央型巨大突出伴马尾神经症状","腰肌劳损","腰椎小关节紊乱"],ans:1},
+  {q:"滚法的操作要领是？",opts:["手指弹拨","手掌快速拍打","以小指掌指关节为着力点滚动","肘尖按压"],ans:2},
+  {q:"推拿治疗肩周炎常用的手法不包括？",opts:["摇法","扳法","一指禅推法","电击法"],ans:3},
+  {q:"小儿推拿的手法特点是？",opts:["重刺激、深透","轻快柔和、平稳着实","与成人完全相同","只推不拿"],ans:1},
+  {q:"推拿后局部出现皮下瘀血，最常见的原因是？",opts:["手法过轻","手法过重或时间过长","治疗时间不足","患者体质太强"],ans:1},
+  {q:"下列哪项不是推拿的适应症？",opts:["腰肌劳损","软组织损伤","开放性伤口","关节扭伤恢复期"],ans:2},
+  {q:"一指禅推法的特点是？",opts:["用力均匀，刚柔并济","快速冲击","大面积按压","关节扳动"],ans:0},
+  {q:"推拿中的"扳法"主要用于？",opts:["调节关节、松解粘连","放松肌肉","促进血液循环","消除疲劳"],ans:0},
+  {q:"推拿治疗前的准备工作不包括？",opts:["了解病情","选择合适体位","清洗局部皮肤","服用止痛药"],ans:3},
+
+  // ── 拔罐与刮痧 (46-55) ──
+  {q:"拔罐疗法的主要作用是？",opts:["清热解毒","温经通络、祛湿逐寒","补气养血","安神定志"],ans:1},
+  {q:"留罐时间一般为？",opts:["1-3分钟","5-15分钟","20-30分钟","40-60分钟"],ans:1},
+  {q:"下列哪种情况不适合拔罐？",opts:["风寒感冒","腰背酸痛","皮肤溃疡破损","肌肉劳损"],ans:2},
+  {q:"刮痧的器具通常采用？",opts:["玻璃棒","水牛角刮板","竹签","铁片"],ans:1},
+  {q:"刮痧时力度应该？",opts:["越大越好","由轻到重，以患者耐受为度","一直很轻","忽轻忽重"],ans:1},
+  {q:"拔罐后罐印呈深紫色，多提示？",opts:["气血充足","体内有瘀血或寒湿较重","身体正常","气血亏虚"],ans:1},
+  {q:"走罐法常用于？",opts:["面部","面积较大、肌肉丰厚处","关节处","手指"],ans:1},
+  {q:"刮痧的方向一般是？",opts:["由上向下、由内向外","任意方向","由下向上","环形刮拭"],ans:0},
+  {q:"拔罐时应注意避免？",opts:["选择合适体位","避开大血管和神经","长时间在同一部位反复拔罐","留罐时间适当"],ans:2},
+  {q:"下列哪项是刮痧的适应症？",opts:["出血性疾病","皮肤过敏","中暑","严重心脏病"],ans:2},
+
+  // ── 艾灸疗法 (56-65) ──
+  {q:"艾灸的主要作用不包括？",opts:["温经散寒","扶阳固脱","消瘀散结","清热泻火"],ans:3},
+  {q:"间接灸中，隔姜灸主要适用于？",opts:["热证","虚寒证","实证","阴虚证"],ans:1},
+  {q:"艾灸时，艾条距离皮肤的一般距离为？",opts:["0.5-1cm","2-5cm","8-10cm","15cm以上"],ans:1},
+  {q:"下列哪个穴位常用于艾灸保健？",opts:["少商","井穴","足三里","十宣"],ans:2},
+  {q:"艾灸的禁忌症是？",opts:["虚寒腹痛","风寒湿痹","实热证或阴虚发热","脾胃虚寒"],ans:2},
+  {q:"温针灸是指？",opts:["只用艾灸","只用针","针刺与艾灸结合使用","用热水袋敷"],ans:2},
+  {q:"艾绒的品质鉴别主要看？",opts:["颜色越白越好","陈久、细腻、无杂质","越新越好","越粗越好"],ans:1},
+  {q:"艾灸"得气"的表现是？",opts:["局部冰冷","局部温热舒适、有传导感","剧烈疼痛","毫无感觉"],ans:1},
+  {q:"下列哪项是艾灸的注意事项？",opts:["艾灸时间越长越好","防止烫伤，注意弹灰","艾灸后立即洗澡","空腹时最适合艾灸"],ans:1},
+  {q:"雀啄灸属于？",opts:["直接灸","悬起灸","间接灸","瘢痕灸"],ans:1},
+
+  // ── 常见病症康复 (66-85) ──
+  {q:"颈椎病的常见分型不包括？",opts:["神经根型","脊髓型","椎动脉型","内脏型"],ans:3},
+  {q:"腰椎间盘突出症最常见的突出部位是？",opts:["L1-L2","L2-L3","L4-L5和L5-S1","T12-L1"],ans:2},
+  {q:"肩周炎的好发年龄段是？",opts:["10-20岁","20-30岁","50岁左右","80岁以上"],ans:2},
+  {q:"中风偏瘫患者康复训练应遵循的原则是？",opts:["尽早开始","等病情完全稳定后","出院后","半年后"],ans:0},
+  {q:"面瘫（面神经麻痹）的针灸治疗常用穴位是？",opts:["足三里","地仓、颊车、合谷","涌泉","百会"],ans:1},
+  {q:"膝关节炎患者应避免？",opts:["适当锻炼","游泳","长时间爬山爬楼梯","理疗"],ans:2},
+  {q:"失眠的中医辨证分型不包括？",opts:["心脾两虚","肝火扰心","阴虚火旺","肾阳虚衰"],ans:3},
+  {q:"头痛的常见中医分型包括？",opts:["风寒头痛、肝阳头痛","只分两种","只有外感","只有内伤"],ans:0},
+  {q:"腰肌劳损的康复治疗不包括？",opts:["推拿按摩","功能锻炼","长期卧床不动","物理治疗"],ans:2},
+  {q:"便秘的中医分型中，虚秘多见于？",opts:["年轻人","老年人或久病体虚者","儿童","孕妇早期"],ans:1},
+  {q:"慢性胃炎的康复调理不包括？",opts:["饮食规律","情志舒畅","暴饮暴食","适当运动"],ans:2},
+  {q:"面瘫恢复期常用的康复治疗方法是？",opts:["仅用药物治疗","针灸+推拿+功能训练","手术","等待自愈"],ans:1},
+  {q:"踝关节扭伤急性期的正确处理是？",opts:["立即热敷","立即按摩","冰敷、制动、抬高","继续运动"],ans:2},
+  {q:"颈椎病患者应避免？",opts:["适当活动颈部","长时间低头看手机","做颈部保健操","正确使用枕头"],ans:1},
+  {q:"落枕的常用推拿治疗部位是？",opts:["腰部","颈肩部","膝关节","足部"],ans:1},
+  {q:"网球肘的病变部位在？",opts:["肘关节内侧","肱骨外上髁","腕关节","肩关节"],ans:1},
+  {q:"跟痛症的常见病因不包括？",opts:["足底筋膜炎","跟骨骨刺","长时间站立行走","上肢过度使用"],ans:3},
+  {q:"腱鞘炎的康复治疗措施是？",opts:["继续高强度活动","制动休息+理疗+推拿","仅手术治疗","热敷+剧烈运动"],ans:1},
+  {q:"骨质疏松症患者适合的运动是？",opts:["剧烈跑步","跳高","散步、太极拳","举重"],ans:2},
+  {q:"偏瘫患者上肢康复训练应遵循的顺序是？",opts:["先远端后近端","先近端后远端","大小关节同时","无顺序要求"],ans:1},
+
+  // ── 中医养生与康复评定 (86-100) ──
+  {q:"中医养生理论中，"法于阴阳"的意思是？",opts:["遵循自然规律","只注重饮食","加强锻炼","服用补品"],ans:0},
+  {q:"中医体质分类中，平和质的特征是？",opts:["体形肥胖","精力充沛、面色润泽","怕冷畏寒","容易感冒"],ans:1},
+  {q:"康复评定的主要内容不包括？",opts:["功能障碍评定","日常生活活动能力评定","血常规检查","肌力评定"],ans:2},
+  {q:"肌力分级中，3级肌力表示？",opts:["完全瘫痪","可见肌肉收缩","能对抗重力但不能对抗阻力","正常肌力"],ans:2},
+  {q:"日常生活活动能力（ADL）评定主要评估？",opts:["心肺功能","自理能力","智力水平","语言能力"],ans:1},
+  {q:"关节活动度测量常用的工具是？",opts:["血压计","量角器","听诊器","温度计"],ans:1},
+  {q:"中医"治未病"的核心思想是？",opts:["生病后治疗","预防为主、防治结合","只用药物治疗","等待自愈"],ans:1},
+  {q:"脊柱侧弯的康复评估常用方法是？",opts:["仅凭肉眼观察","Adams前屈试验+影像学检查","只做X线","不需要评估"],ans:1},
+  {q:"Barthel指数评定量表主要用于评估？",opts:["疼痛程度","日常生活活动能力","智力水平","心理状态"],ans:1},
+  {q:"对于长期卧床患者，康复护理重点预防的是？",opts:["感冒","压疮（褥疮）","失眠","脱发"],ans:1},
+  {q:"康复治疗的基本原则是？",opts:["单一治疗","早期介入、综合治疗、循序渐进","只做运动","完全休息"],ans:1},
+  {q:"运动疗法中，有氧运动的特点是？",opts:["高强度、短时间","低中强度、持续时间较长","只做力量训练","不能提高心肺功能"],ans:1},
+  {q:"中医食疗的基本原则是？",opts:["所有人吃一样的东西","辨证施食、因人因时因地制宜","只吃素食","多吃保健品"],ans:1},
+  {q:"对于气郁体质者，饮食调理宜多食？",opts:["辛辣刺激食物","理气解郁的食物如柑橘、玫瑰花茶","寒凉食物","油腻食物"],ans:1},
+  {q:"中医康复与现代康复结合的优势是？",opts:["互相排斥","优势互补、标本兼治","中医完全替代现代康复","现代康复完全替代中医"],ans:1}
+];
+
+// ═══════════════ STATE ═══════════════
+const TOTAL_TIME = 120 * 60;
+let state = {
+  studentName:'', studentId:'',
+  answers:new Array(100).fill(-1), currentIndex:0,
+  timeLeft:TOTAL_TIME, timerInterval:null, startTime:null, submitted:false
+};
+
+const $=id=>document.getElementById(id);
+const pageLogin=$('page-login'),pageExam=$('page-exam'),pageResults=$('page-results');
+
+function showPage(page){[pageLogin,pageExam,pageResults].forEach(p=>p.classList.remove('active'));page.classList.add('active')}
+
+let toastTimer;
+function showToast(msg){const t=$('toast')||document.createElement('div');t.textContent=msg;t.className='toast show';if(!t.parentNode)document.body.appendChild(t);clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2000)}
+
+function validateId(id){if(id.length!==18)return false;const w=[7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2],c='10X98765432';let s=0;for(let i=0;i<17;i++){if(isNaN(parseInt(id[i])))return false;s+=parseInt(id[i])*w[i]}return c[s%11]===id[17].toUpperCase()}
+
+function startExam(){
+  const ni=$('inputName'),ii=$('inputId'),en=$('errName'),ei=$('errId');let v=true;
+  const name=ni.value.trim();
+  if(!name){en.classList.add('show');ni.classList.add('error');v=false}else{en.classList.remove('show');ni.classList.remove('error')}
+  const id=ii.value.trim();
+  if(!id||!validateId(id)){ei.classList.add('show');ii.classList.add('error');v=false}else{ei.classList.remove('show');ii.classList.remove('error')}
+  if(!v)return;
+  state.studentName=name;state.studentId=id;state.answers=new Array(100).fill(-1);state.currentIndex=0;state.timeLeft=TOTAL_TIME;state.submitted=false;state.startTime=Date.now();
+  showPage(pageExam);renderQuestion();renderQuestionGrid();startTimer();updateProgress();updateNavButtons()
+}
+
+function startTimer(){clearInterval(state.timerInterval);updateTimerDisplay();state.timerInterval=setInterval(()=>{state.timeLeft--;updateTimerDisplay();if(state.timeLeft<=0){clearInterval(state.timerInterval);showToast('⏰ 考试时间到');setTimeout(submitExam,1500)}},1000)}
+function updateTimerDisplay(){const m=Math.floor(state.timeLeft/60),s=state.timeLeft%60;const d=$('timerDisplay');d.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;d.classList.remove('warning','danger');const pct=state.timeLeft/TOTAL_TIME;const r=$('timerRing');r.style.strokeDashoffset=138.23*(1-pct);$('timerPercent').textContent=Math.round(pct*100)+'%';r.classList.remove('warning','danger');if(pct<0.1){d.classList.add('danger');r.classList.add('danger')}else if(pct<0.25){d.classList.add('warning');r.classList.add('warning')}}
+function updateProgress(){const a=state.answers.filter(a=>a>=0).length;$('progressFill').style.width=(a/100*100)+'%'}
+function renderQuestion(){const idx=state.currentIndex,q=QUESTIONS[idx];$('qNumber').textContent=`第 ${idx+1} 题`;$('qText').textContent=q.q;const letters=['A','B','C','D'],c=$('optionsList');c.innerHTML='';q.opts.forEach((opt,i)=>{const div=document.createElement('div');div.className='option-item'+(state.answers[idx]===i?' selected':'');div.innerHTML=`<span class="option-letter">${letters[i]}</span><span class="option-text">${opt}</span>`;div.addEventListener('click',()=>selectOption(idx,i));c.appendChild(div)});updateNavButtons();updateProgress();renderQuestionGrid()}
+function selectOption(qIdx,optIdx){if(state.submitted)return;state.answers[qIdx]=optIdx;const items=$('optionsList').children;for(let i=0;i<items.length;i++)items[i].classList.toggle('selected',i===optIdx);updateProgress();renderQuestionGrid()}
+function nextQuestion(){if(state.currentIndex<99){state.currentIndex++;renderQuestion()}}
+function prevQuestion(){if(state.currentIndex>0){state.currentIndex--;renderQuestion()}}
+function updateNavButtons(){$('btnPrev').style.visibility=state.currentIndex===0?'hidden':'visible';$('btnNext').style.visibility=state.currentIndex===99?'hidden':'visible'}
+function renderQuestionGrid(){const grid=$('questionGrid');grid.innerHTML='';for(let i=0;i<100;i++){const dot=document.createElement('div');dot.className='grid-dot';if(state.answers[i]>=0)dot.classList.add('answered');if(i===state.currentIndex)dot.classList.add('current');dot.textContent=i+1;dot.addEventListener('click',()=>{state.currentIndex=i;renderQuestion();document.querySelector('.card').scrollIntoView({behavior:'smooth'})});grid.appendChild(dot)}}
+let gridOpen=false;
+function toggleGrid(){gridOpen=!gridOpen;const g=$('questionGrid'),i=$('gridToggleIcon'),t=$('gridToggleText');if(gridOpen){g.classList.add('open');i.textContent='🔼';t.textContent='收起答题卡'}else{g.classList.remove('open');i.textContent='📋';t.textContent='答题卡'}}
+
+function showSubmitConfirm(){const answered=state.answers.filter(a=>a>=0).length,unanswered=100-answered;let desc=`您已完成 ${answered} 题，`;if(unanswered>0)desc+=`还有 <strong style="color:#ef4444;">${unanswered}</strong> 题未作答。`;else desc+='所有题目均已作答。';desc+='<br>交卷后将无法修改，确定要交卷吗？';$('modalDesc').innerHTML=desc;$('submitModal').classList.add('show')}
+function hideSubmitConfirm(){$('submitModal').classList.remove('show')}
+
+function submitExam(){
+  clearInterval(state.timerInterval);state.submitted=true;hideSubmitConfirm();
+  const totalTimeSec=TOTAL_TIME-state.timeLeft,totalMin=Math.floor(totalTimeSec/60),totalSec=totalTimeSec%60;
+  let correct=0,wrong=0,unanswered=0;
+  for(let i=0;i<100;i++){if(state.answers[i]<0)unanswered++;else if(state.answers[i]===QUESTIONS[i].ans)correct++;else wrong++}
+  const result={examType:'中医康复理疗',name:state.studentName,id:state.studentId.substring(0,4)+'****'+state.studentId.substring(14),idFull:state.studentId,score:correct,correct,wrong,unanswered,answers:state.answers,timeUsed:totalTimeSec,timeDisplay:`${totalMin}分${totalSec}秒`,submittedAt:new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}),timestamp:Date.now()};
+  $('submittedName').textContent='姓名：'+result.name;$('submittedTime').textContent='用时：'+result.timeDisplay;showPage(pageResults);window.scrollTo({top:0,behavior:'smooth'});
+  saveResult(result)
+}
+
+async function saveResult(result){
+  const API='https://2d31d8040531cd3b-117-152-147-122.serveousercontent.com/results';
+  try{const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(result)});if(res.ok)console.log('✅ 成绩已保存');else throw new Error('Save failed')}catch(e){console.warn('⚠️ 保存失败');fallbackStore(result)}
+}
+function fallbackStore(result){const b=JSON.parse(localStorage.getItem('exam_tcm_backup')||'[]');b.push(result);localStorage.setItem('exam_tcm_backup',JSON.stringify(b))}
+
+function restartExam(){clearInterval(state.timerInterval);state.answers=new Array(100).fill(-1);state.currentIndex=0;state.timeLeft=TOTAL_TIME;state.submitted=false;state.studentName='';state.studentId='';$('inputName').value='';$('inputId').value='';$('errName').classList.remove('show');$('inputName').classList.remove('error');$('errId').classList.remove('show');$('inputId').classList.remove('error');gridOpen=false;$('questionGrid').classList.remove('open');$('gridToggleIcon').textContent='📋';$('gridToggleText').textContent='答题卡';showPage(pageLogin);window.scrollTo({top:0,behavior:'smooth'})}
+
+document.addEventListener('keydown',(e)=>{if(state.submitted||!pageExam.classList.contains('active'))return;const idx=state.currentIndex;switch(e.key.toLowerCase()){case'a':selectOption(idx,0);break;case'b':selectOption(idx,1);break;case'c':selectOption(idx,2);break;case'd':selectOption(idx,3);break;case'arrowleft':prevQuestion();e.preventDefault();break;case'arrowright':nextQuestion();e.preventDefault();break}})
+window.addEventListener('beforeunload',(e)=>{if(!state.submitted&&pageExam.classList.contains('active')){e.preventDefault();e.returnValue='考试正在进行中，确定要离开吗？'}})
+</script>
+</body>
+</html>
