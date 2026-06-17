@@ -733,6 +733,15 @@
       "wrong": 0,
       "unanswered": 1,
       "timestamp": 9999900000000
+    },
+    {
+      "examType": "��ҽ��������",
+      "name": "��֤�ύ",
+      "score": 88,
+      "correct": 88,
+      "wrong": 10,
+      "unanswered": 2,
+      "timestamp": 8888888888888
     }
   ]
 }
