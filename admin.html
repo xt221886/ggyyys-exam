@@ -152,7 +152,7 @@ tr:hover td{background:#f0fdf4}
 
 <script>
 const ADMIN_PWD = 'admin888';
-const API_URL = 'https://ggyyys-exam.vercel.app/results';
+const API_URL = (location.hostname==='localhost'||location.hostname==='127.0.0.1')?'/results':'https://ggyyys-exam.vercel.app/results';
 const EXAM_TYPE = '公共营养师';
 
 let allResults = [];
