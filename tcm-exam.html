@@ -378,7 +378,7 @@ function submitExam(){
 }
 
 async function saveResult(result){
-  const API='https://c58f19b0e3818dfc-117-152-147-122.serveousercontent.com/results';
+  const API='https://39f7ba0b7a54856f-117-152-147-122.serveousercontent.com/results';
   try{const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(result)});if(res.ok)console.log('✅ 成绩已保存');else throw new Error('Save failed')}catch(e){console.warn('⚠️ 保存失败');fallbackStore(result)}
 }
 function fallbackStore(result){const b=JSON.parse(localStorage.getItem('exam_tcm_backup')||'[]');b.push(result);localStorage.setItem('exam_tcm_backup',JSON.stringify(b))}
