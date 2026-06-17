@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>公共营养师在线考试</title>
+<style>
+:root {
+  --green-50: #f0fdf4;
+  --green-100: #dcfce7;
+  --green-200: #bbf7d0;
+  --green-300: #86efac;
+  --green-400: #4ade80;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --green-800: #166534;
+  --green-900: #14532d;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --white: #ffffff;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow: 0 4px 14px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.06);
+  --shadow-xl: 0 20px 48px rgba(0,0,0,.16), 0 8px 20px rgba(0,0,0,.08);
+  --font-display: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-body: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { font-size:16px; -webkit-tap-highlight-color:transparent; }
+body {
+  font-family: var(--font-body);
+  background: #f0f9f1;
+  color: var(--slate-800);
+  min-height: 100vh;
+  min-height: 100dvh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Background Pattern ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(34,197,94,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 90%, rgba(34,197,94,.06) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(22,163,74,.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Decorative floating elements ── */
+body::after {
+  content: '';
+  position: fixed;
+  top: -120px; right: -80px;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(34,197,94,.07) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: floatBg 12s ease-in-out infinite;
+}
+@keyframes floatBg {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(-30px,20px) scale(1.08); }
+  66% { transform: translate(15px,-15px) scale(.94); }
+}
+
+/* ── Container ── */
+.app-container {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--slate-100);
+  transition: all .3s ease;
+}
+
+/* ── Header ── */
+.app-header {
+  text-align: center;
+  padding: 28px 16px 20px;
+  position: relative;
+}
+.app-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  border-radius: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 24px rgba(34,197,94,.3);
+  font-size: 28px;
+  animation: logoPulse 3s ease-in-out infinite;
+}
+@keyframes logoPulse {
+  0%,100% { box-shadow: 0 8px 24px rgba(34,197,94,.3); }
+  50% { box-shadow: 0 8px 36px rgba(34,197,94,.45); }
+}
+.app-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--slate-900);
+  letter-spacing: .02em;
+}
+.app-subtitle {
+  font-size: .85rem;
+  color: var(--slate-500);
+  margin-top: 4px;
+}
+
+/* ── Form ── */
+.form-group { margin-bottom: 18px; }
+.form-label {
+  display: block;
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--slate-700);
+  margin-bottom: 6px;
+}
+.form-label .required { color: var(--red-500); margin-left: 2px; }
+.form-input {
+  width: 100%;
+  height: 48px;
+  border: 2px solid var(--slate-200);
+  border-radius: var(--radius);
+  padding: 0 14px;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  color: var(--slate-800);
+  background: var(--slate-50);
+  transition: all .2s ease;
+  outline: none;
+  -webkit-appearance: none;
+}
+.form-input:focus {
+  border-color: var(--green-500);
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(34,197,94,.1);
+}
+.form-input.error {
+  border-color: var(--red-400);
+  background: #fef2f2;
+}
+.form-error {
+  font-size: .78rem;
+  color: var(--red-500);
+  margin-top: 4px;
+  display: none;
+}
+.form-error.show { display: block; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 50px;
+  padding: 0 28px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all .25s ease;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(34,197,94,.35);
+  font-size: 1.05rem;
+  letter-spacing: .04em;
+}
+.btn-primary:hover { box-shadow: 0 6px 20px rgba(34,197,94,.45); transform: translateY(-1px); }
+.btn-primary:active { transform: scale(.97) translateY(0); }
+.btn-outline {
+  background: var(--white);
+  color: var(--green-700);
+  border: 2px solid var(--green-300);
+}
+.btn-outline:hover { background: var(--green-50); border-color: var(--green-500); }
+.btn-sm { height: 38px; padding: 0 16px; font-size: .85rem; border-radius: var(--radius-sm); }
+.btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(34,197,94,.35);
+  font-size: 1.05rem;
+  letter-spacing: .04em;
+  margin-top: 8px;
+}
+
+/* ── Timer Bar ── */
+.timer-bar-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--white);
+  padding: 12px 16px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: -16px -16px 16px;
+  border-bottom: 1px solid var(--slate-100);
+}
+.timer-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.timer-info {
+  flex: 1;
+  min-width: 0;
+}
+.timer-label {
+  font-size: .72rem;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.timer-display {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--slate-900);
+}
+.timer-display.warning { color: var(--amber-500); animation: blink 1s infinite; }
+.timer-display.danger { color: var(--red-500); animation: blink .5s infinite; }
+@keyframes blink { 50% { opacity: .4; } }
+.timer-progress-wrap {
+  flex-shrink: 0;
+  width: 52px; height: 52px;
+  position: relative;
+}
+.timer-progress-ring {
+  transform: rotate(-90deg);
+  width: 52px; height: 52px;
+}
+.timer-progress-ring circle {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset .5s ease, stroke .3s ease;
+}
+.timer-ring-bg { stroke: var(--slate-100); }
+.timer-ring-fg { stroke: var(--green-500); }
+.timer-ring-fg.warning { stroke: var(--amber-500); }
+.timer-ring-fg.danger { stroke: var(--red-500); }
+.timer-percent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--slate-600);
+}
+
+/* ── Progress bar ── */
+.progress-bar-wrap {
+  background: var(--slate-100);
+  border-radius: 99px;
+  height: 6px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green-500), var(--green-400));
+  border-radius: 99px;
+  transition: width .4s ease;
+}
+
+/* ── Question Card ── */
+.question-number {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--green-50);
+  color: var(--green-700);
+  font-size: .8rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 99px;
+  margin-bottom: 12px;
+}
+.question-text {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--slate-900);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.option-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 2px solid var(--slate-200);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all .2s ease;
+  background: var(--white);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.option-item:active { transform: scale(.985); }
+.option-item:hover { border-color: var(--green-300); background: var(--green-50); }
+.option-item.selected {
+  border-color: var(--green-500);
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  box-shadow: 0 0 0 4px rgba(34,197,94,.08);
+}
+.option-letter {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--slate-100);
+  color: var(--slate-600);
+  font-weight: 700;
+  font-size: .9rem;
+  transition: all .2s ease;
+}
+.option-item.selected .option-letter {
+  background: var(--green-500);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(34,197,94,.3);
+}
+.option-text {
+  flex: 1;
+  font-size: .95rem;
+  color: var(--slate-700);
+  line-height: 1.5;
+}
+
+/* ── Navigation ── */
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+.nav-buttons .btn { flex: 1; }
+
+/* ── Question Grid (quick jump) ── */
+.question-grid-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: .85rem;
+  color: var(--green-600);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px;
+  margin-top: 12px;
+  user-select: none;
+}
+.question-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--slate-50);
+  border-radius: var(--radius);
+  max-height: 0;
+  overflow: hidden;
+  transition: all .35s ease;
+  opacity: 0;
+}
+.question-grid.open { max-height: 400px; opacity: 1; padding: 12px; }
+.grid-dot {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: .7rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--white);
+  border: 1.5px solid var(--slate-200);
+  color: var(--slate-500);
+  transition: all .15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.grid-dot.answered { background: var(--green-100); border-color: var(--green-300); color: var(--green-700); }
+.grid-dot.current { background: var(--green-500); border-color: var(--green-500); color: #fff; box-shadow: 0 2px 8px rgba(34,197,94,.4); }
+
+/* ── Results Page ── */
+.result-icon {
+  font-size: 64px;
+  text-align: center;
+  margin-bottom: 8px;
+  animation: resultBounce .6s ease-out;
+}
+@keyframes resultBounce {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.result-score {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--green-600), var(--green-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+.result-score.fail {
+  background: linear-gradient(135deg, var(--red-500), var(--amber-500));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.result-label { text-align: center; font-size: .9rem; color: var(--slate-500); margin-top: 4px; }
+.result-grade {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 8px;
+  padding: 8px 20px;
+  border-radius: 99px;
+  display: inline-block;
+}
+.result-grade.pass { background: var(--green-100); color: var(--green-700); }
+.result-grade.fail { background: #fef2f2; color: var(--red-600); }
+
+.result-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+  text-align: center;
+}
+.result-stat {
+  background: var(--slate-50);
+  border-radius: var(--radius);
+  padding: 14px 8px;
+}
+.result-stat-val { font-size: 1.4rem; font-weight: 700; color: var(--slate-900); }
+.result-stat-label { font-size: .72rem; color: var(--slate-500); margin-top: 2px; }
+
+/* ── Page Stack ── */
+.page { display: none; flex: 1; flex-direction: column; }
+.page.active { display: flex; }
+.page.centered { justify-content: center; }
+
+/* ── Footer ── */
+.app-footer {
+  text-align: center;
+  padding: 20px 16px;
+  font-size: .75rem;
+  color: var(--slate-400);
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--slate-900);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 99px;
+  font-size: .85rem;
+  font-weight: 600;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.toast.show { opacity: 1; }
+
+/* ── Submit confirm modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,.5);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.modal-overlay.show { opacity: 1; pointer-events: auto; }
+.modal-box {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 28px 24px;
+  margin: 20px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+  transform: translateY(20px);
+  transition: transform .3s ease;
+}
+.modal-overlay.show .modal-box { transform: translateY(0); }
+.modal-title { font-size: 1.1rem; font-weight: 700; color: var(--slate-900); margin-bottom: 8px; }
+.modal-desc { font-size: .88rem; color: var(--slate-500); margin-bottom: 20px; line-height: 1.5; }
+.modal-buttons { display: flex; gap: 10px; }
+.modal-buttons .btn { flex: 1; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--slate-300); border-radius: 99px; }
+
+@media (max-width: 380px) {
+  .card { padding: 18px 14px; }
+  .app-title { font-size: 1.3rem; }
+  .question-text { font-size: .98rem; }
+  .option-item { padding: 12px 14px; }
+  .question-grid { grid-template-columns: repeat(8, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+
+  <!-- ═══════════ PAGE 1: LOGIN ═══════════ -->
+  <div class="page active centered" id="page-login">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="app-header">
+        <div class="app-logo">🥗</div>
+        <h1 class="app-title">公共营养师在线考试</h1>
+        <p class="app-subtitle">National Public Nutritionist Exam Simulation</p>
+      </div>
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">姓  名 <span class="required">*</span></label>
+          <input class="form-input" id="inputName" type="text" placeholder="请输入您的真实姓名" maxlength="30" autocomplete="name">
+          <div class="form-error" id="errName">请输入姓名</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">身份证号 <span class="required">*</span></label>
+          <input class="form-input" id="inputId" type="text" placeholder="请输入18位身份证号码" maxlength="18" autocomplete="off">
+          <div class="form-error" id="errId">请输入正确的18位身份证号</div>
+        </div>
+        <button class="btn btn-primary" onclick="startExam()">开 始 考 试</button>
+      </div>
+      <div style="text-align:center;margin-top:16px;font-size:.8rem;color:var(--slate-400);">
+        📋 共 100 题 · 满分 100 分 · 考试时间 120 分钟<br>
+        及格线 60 分 · 全部为单项选择题
+      </div>
+    </div>
+    <div class="app-footer">公共营养师在线考试系统 © 2026</div>
+  </div>
+
+  <!-- ═══════════ PAGE 2: EXAM ═══════════ -->
+  <div class="page" id="page-exam">
+    <!-- Timer -->
+    <div class="timer-bar-wrap" id="timerBar">
+      <span class="timer-icon">⏱️</span>
+      <div class="timer-info">
+        <div class="timer-label">剩余时间</div>
+        <div class="timer-display" id="timerDisplay">120:00</div>
+      </div>
+      <div class="timer-progress-wrap">
+        <svg class="timer-progress-ring" viewBox="0 0 52 52">
+          <circle class="timer-ring-bg" cx="26" cy="26" r="22"/>
+          <circle class="timer-ring-fg" id="timerRing" cx="26" cy="26" r="22"
+            stroke-dasharray="138.23" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-percent" id="timerPercent">100%</div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+
+    <!-- Question Card -->
+    <div class="card" style="flex:1;">
+      <div class="question-number" id="qNumber">第 1 题</div>
+      <div class="question-text" id="qText"></div>
+      <div class="options-list" id="optionsList"></div>
+      <div class="nav-buttons">
+        <button class="btn btn-outline btn-sm" id="btnPrev" onclick="prevQuestion()">◀ 上一题</button>
+        <button class="btn btn-outline btn-sm" id="btnNext" onclick="nextQuestion()">下一题 ▶</button>
+      </div>
+
+      <!-- Question grid toggle -->
+      <div class="question-grid-toggle" onclick="toggleGrid()">
+        <span id="gridToggleIcon">📋</span> <span id="gridToggleText">答题卡</span>
+      </div>
+      <div class="question-grid" id="questionGrid"></div>
+
+      <button class="btn btn-submit" style="margin-top:16px;" onclick="showSubmitConfirm()">
+        ✅ 交卷
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════ PAGE 3: RESULTS ═══════════ -->
+  <div class="page centered" id="page-results">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="card" style="text-align:center;">
+        <div class="result-icon" id="resultIcon"></div>
+        <div class="result-score" id="resultScore"></div>
+        <div class="result-label">总得分（满分 100 分）</div>
+        <div style="margin-top:8px;">
+          <span class="result-grade" id="resultGrade"></span>
+        </div>
+        <div class="result-stats">
+          <div class="result-stat">
+            <div class="result-stat-val" id="statCorrect">0</div>
+            <div class="result-stat-label">✅ 正确</div>
+          </div>
+          <div class="result-stat">
+            <div class="result-stat-val" id="statWrong">0</div>
+            <div class="result-stat-label">❌ 错误</div>
+          </div>
+          <div class="result-stat">
+            <div class="result-stat-val" id="statUnanswered">0</div>
+            <div class="result-stat-label">⬜ 未答</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;font-size:.85rem;color:var(--slate-500);" id="resultTime"></div>
+        <button class="btn btn-primary" style="margin-top:20px;" onclick="restartExam()">🔄 重新考试</button>
+      </div>
+    </div>
+    <div class="app-footer">公共营养师在线考试系统 © 2026</div>
+  </div>
+
+  <!-- ═══════════ SUBMIT CONFIRM MODAL ═══════════ -->
+  <div class="modal-overlay" id="submitModal">
+    <div class="modal-box">
+      <div style="font-size:2.5rem;margin-bottom:8px;">⚠️</div>
+      <div class="modal-title">确认交卷？</div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-buttons">
+        <button class="btn btn-outline btn-sm" onclick="hideSubmitConfirm()">继续答题</button>
+        <button class="btn btn-primary btn-sm" style="background:var(--red-500);box-shadow:0 4px 14px rgba(239,68,68,.35);" onclick="submitExam()">确认交卷</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════
+//  公共营养师在线考试 — 题库 (100题)
+// ═══════════════════════════════════
+const QUESTIONS = [
+  // ── 基础营养学 (1-15) ──
+  { q:"人体所需的七大营养素中，属于宏量营养素的是？", opts:["蛋白质、脂肪、碳水化合物","维生素、矿物质、水","蛋白质、维生素、膳食纤维","脂肪、矿物质、碳水化合物"], ans:0 },
+  { q:"每克脂肪在体内氧化可产生多少能量？", opts:["4 kcal","7 kcal","9 kcal","12 kcal"], ans:2 },
+  { q:"下列哪种氨基酸属于必需氨基酸？", opts:["谷氨酸","丙氨酸","赖氨酸","甘氨酸"], ans:2 },
+  { q:"蛋白质的推荐摄入量（RNI）中，成年男性每日约为？", opts:["45 g","65 g","80 g","100 g"], ans:1 },
+  { q:"下列哪种维生素属于脂溶性维生素？", opts:["维生素B1","维生素C","维生素D","叶酸"], ans:2 },
+  { q:"碳水化合物的能量系数为？", opts:["4 kcal/g","7 kcal/g","9 kcal/g","16.7 kJ/g"], ans:0 },
+  { q:"人体含量最多的矿物质是？", opts:["铁","锌","钙","碘"], ans:2 },
+  { q:"下列哪种脂肪酸属于必需脂肪酸？", opts:["油酸","亚油酸","棕榈酸","硬脂酸"], ans:1 },
+  { q:"维生素B1缺乏可导致？", opts:["夜盲症","脚气病","坏血病","佝偻病"], ans:1 },
+  { q:"每克蛋白质在体内氧化可产生多少能量？", opts:["4 kcal","7 kcal","9 kcal","16.7 kJ"], ans:0 },
+  { q:"膳食纤维的主要生理功能不包括？", opts:["促进肠道蠕动","提供能量","降低血糖反应","降低胆固醇"], ans:1 },
+  { q:"下列哪种矿物质是血红蛋白的重要组成成分？", opts:["钙","铁","锌","硒"], ans:1 },
+  { q:"维生素C缺乏可导致？", opts:["夜盲症","脚气病","坏血病","癞皮病"], ans:2 },
+  { q:"水的生理功能不包括？", opts:["调节体温","运输营养物质","提供能量","参与代谢反应"], ans:2 },
+  { q:"中国居民膳食营养素参考摄入量中，RNI代表什么？", opts:["平均需要量","推荐摄入量","适宜摄入量","可耐受最高摄入量"], ans:1 },
+
+  // ── 食物营养学 (16-30) ──
+  { q:"下列哪种食物中优质蛋白质含量最高？", opts:["大米","鸡蛋","白菜","苹果"], ans:1 },
+  { q:"下列哪种食物富含维生素A？", opts:["动物肝脏","大米","黄瓜","土豆"], ans:0 },
+  { q:"大豆中的主要抗营养因子是？", opts:["草酸","胰蛋白酶抑制剂","植酸","单宁"], ans:1 },
+  { q:"牛奶中含量最丰富的矿物质是？", opts:["铁","钙","锌","碘"], ans:1 },
+  { q:"谷物中第一限制氨基酸通常是？", opts:["赖氨酸","蛋氨酸","色氨酸","苏氨酸"], ans:0 },
+  { q:"下列哪种烹饪方式最有利于保留蔬菜中的维生素C？", opts:["长时间炖煮","急火快炒","油炸","反复加热"], ans:1 },
+  { q:"深海鱼油中富含的主要功能性成分是？", opts:["饱和脂肪酸","EPA和DHA","反式脂肪酸","胆固醇"], ans:1 },
+  { q:"下列哪种食物中铁的吸收率最高？", opts:["菠菜","动物肝脏","鸡蛋","牛奶"], ans:1 },
+  { q:"豆类与谷类搭配食用可以提高蛋白质营养价值，这利用了？", opts:["蛋白质互补作用","氨基酸拮抗作用","蛋白质变性","蛋白质水解"], ans:0 },
+  { q:"下列哪种食物属于碱性食物？", opts:["猪肉","鸡蛋","大米","菠菜"], ans:3 },
+  { q:"发芽土豆中含有的有毒成分是？", opts:["亚硝酸盐","龙葵素","皂苷","氰苷"], ans:1 },
+  { q:"下列哪种油类中单不饱和脂肪酸含量最高？", opts:["猪油","橄榄油","大豆油","椰子油"], ans:1 },
+  { q:"蔬菜水果中含量最丰富的维生素是？", opts:["维生素A","维生素C","维生素D","维生素B12"], ans:1 },
+  { q:"蛋黄中胆固醇含量较高的主要原因是？", opts:["储存脂肪","构成细胞膜和合成激素","提供能量","运输氧气"], ans:1 },
+  { q:"霉变花生和玉米中最常见的致癌物是？", opts:["亚硝胺","黄曲霉毒素","苯并芘","丙烯酰胺"], ans:1 },
+
+  // ── 膳食指南与营养配餐 (31-45) ──
+  { q:"《中国居民膳食指南（2022）》建议成年人每天食盐摄入量不超过？", opts:["3 g","5 g","8 g","10 g"], ans:1 },
+  { q:"膳食宝塔建议成年人每天摄入谷类食物的量为？", opts:["100-200 g","200-300 g","300-500 g","500-700 g"], ans:1 },
+  { q:"合理营养的基本原则不包括？", opts:["食物多样","饥饱不定","合理搭配","适量摄入"], ans:1 },
+  { q:"中国居民平衡膳食宝塔共分为几层？", opts:["3层","4层","5层","6层"], ans:2 },
+  { q:"膳食指南建议每天摄入奶及奶制品的量约为？", opts:["100 g","300-500 g","600-800 g","1000 g"], ans:1 },
+  { q:"一日三餐的能量分配最合理的是？", opts:["20%、40%、40%","30%、40%、30%","40%、30%、30%","各33%"], ans:1 },
+  { q:"下列哪种饮食习惯最有利于控制体重？", opts:["不吃早餐","细嚼慢咽","边看电视边吃饭","快速进食"], ans:1 },
+  { q:"膳食指南建议成年人每天烹调油用量为？", opts:["10-15 g","25-30 g","40-50 g","60-70 g"], ans:1 },
+  { q:"下列哪种食物不属于中国居民膳食宝塔的推荐种类？", opts:["蔬菜水果","畜禽肉类","含糖饮料","大豆坚果"], ans:2 },
+  { q:"学龄前儿童每日推荐的户外活动时间至少为？", opts:["30分钟","60分钟","90分钟","120分钟"], ans:1 },
+  { q:"三餐定时定量的主要目的是？", opts:["节约食物","建立规律的消化生物钟","减少社交时间","节约开支"], ans:1 },
+  { q:"下列哪项不符合《中国居民膳食指南》的核心推荐？", opts:["食物多样，谷类为主","多吃蔬菜水果","不吃主食以减肥","适量吃鱼禽蛋瘦肉"], ans:2 },
+  { q:"配餐时，三大宏量营养素的供能比例合理范围是？", opts:["蛋白质10-15%、脂肪20-30%、碳水化合物55-65%","蛋白质20-30%、脂肪10-15%、碳水化合物55-65%","蛋白质30-40%、脂肪30-40%、碳水化合物20-30%","蛋白质5-10%、脂肪40-50%、碳水化合物40-50%"], ans:0 },
+  { q:"下列哪种食物补钙效果最好？", opts:["骨头汤","牛奶","虾皮","豆浆"], ans:1 },
+  { q:"以下哪种饮品不含咖啡因？", opts:["绿茶","咖啡","菊花茶","可乐"], ans:2 },
+
+  // ── 人群营养 (46-60) ──
+  { q:"孕期女性需要特别补充的矿物质是？", opts:["钠","铁","钾","磷"], ans:1 },
+  { q:"婴幼儿辅食添加的最佳开始时间是？", opts:["3个月","4-6个月","8个月","12个月"], ans:1 },
+  { q:"母乳中含量最高的免疫物质是？", opts:["IgG","IgA","IgM","IgE"], ans:1 },
+  { q:"青春期少年最容易缺乏的矿物质是？", opts:["钠","钙","钾","氯"], ans:1 },
+  { q:"老年人容易发生骨质疏松的主要原因是？", opts:["钙摄入过多","维生素D合成减少和钙吸收下降","运动过多","蛋白质摄入过多"], ans:1 },
+  { q:"孕期补充叶酸的主要目的是预防？", opts:["早产","胎儿神经管畸形","巨大儿","妊娠糖尿病"], ans:1 },
+  { q:"运动员运动后应优先补充的是？", opts:["蛋白质和碳水化合物","脂肪","膳食纤维","酒精"], ans:0 },
+  { q:"母乳喂养的婴儿，出生后多久应开始补充维生素D？", opts:["出生后立即","出生后2周左右","出生后3个月","出生后6个月"], ans:1 },
+  { q:"老年人饮食中应特别注意增加的营养素是？", opts:["能量","蛋白质","钙和维生素D","钠"], ans:2 },
+  { q:"学龄儿童早餐能量应占全天总能量的？", opts:["10-15%","25-30%","40-45%","50-55%"], ans:1 },
+  { q:"更年期女性饮食中应重点补充？", opts:["大豆异黄酮","咖啡因","酒精","高糖食物"], ans:0 },
+  { q:"肥胖儿童进行饮食干预时应避免？", opts:["减少高热量零食","极端节食","增加运动","多吃蔬菜"], ans:1 },
+  { q:"妊娠期糖尿病的饮食管理原则不包括？", opts:["少量多餐","选择低GI食物","完全不吃主食","控制总能量"], ans:2 },
+  { q:"下列哪种营养素对胎儿大脑发育至关重要？", opts:["DHA","饱和脂肪","糖","钠"], ans:0 },
+  { q:"哺乳期女性每日额外需要的能量约为？", opts:["100 kcal","300 kcal","500 kcal","800 kcal"], ans:2 },
+
+  // ── 临床营养 (61-75) ──
+  { q:"糖尿病患者饮食控制的首要原则是？", opts:["完全不吃主食","控制总能量摄入","只吃蛋白质","只吃蔬菜"], ans:1 },
+  { q:"高血压患者应限制摄入的矿物质是？", opts:["钾","钙","钠","镁"], ans:2 },
+  { q:"痛风患者应限制摄入的食物是？", opts:["蔬菜","水果","动物内脏","米饭"], ans:2 },
+  { q:"高血脂患者应优先选择的食用油是？", opts:["猪油","橄榄油","黄油","椰子油"], ans:1 },
+  { q:"肾病患者饮食中需要限制的营养素是？", opts:["碳水化合物","蛋白质","脂肪","膳食纤维"], ans:1 },
+  { q:"下列哪种食物适合缺铁性贫血患者食用？", opts:["浓茶","动物血","牛奶","咖啡"], ans:1 },
+  { q:"胃溃疡患者的饮食原则是？", opts:["少食多餐、定时定量","大量进食","暴饮暴食","只吃流食"], ans:0 },
+  { q:"肝硬化患者发生肝性脑病时应限制？", opts:["碳水化合物","蛋白质","脂肪","维生素"], ans:1 },
+  { q:"糖尿病患者血糖生成指数（GI值）最低的主食是？", opts:["白米饭","馒头","燕麦","白面包"], ans:2 },
+  { q:"骨质疏松患者的饮食应增加？", opts:["钠的摄入","钙和维生素D的摄入","磷的摄入","咖啡的摄入"], ans:1 },
+  { q:"胰腺炎急性期患者的营养支持首选？", opts:["口服高蛋白饮食","肠外营养","高脂饮食","固体食物"], ans:1 },
+  { q:"肥胖症患者减重饮食中，每日能量摄入建议减少？", opts:["100-200 kcal","300-500 kcal","800-1000 kcal","1500 kcal以上"], ans:1 },
+  { q:"胆囊炎患者应限制摄入的是？", opts:["碳水化合物","高脂肪食物","蛋白质","膳食纤维"], ans:1 },
+  { q:"便秘患者饮食中应增加？", opts:["精细米面","膳食纤维和水","高脂食物","辛辣食物"], ans:1 },
+  { q:"甲状腺功能亢进患者饮食应？", opts:["限制能量","高能量高蛋白高维生素","低蛋白","低维生素"], ans:1 },
+
+  // ── 食品安全 (76-85) ──
+  { q:"食物中毒最常见的致病因素是？", opts:["化学性污染","细菌性污染","有毒动植物","真菌毒素"], ans:1 },
+  { q:"食品中亚硝酸盐的主要危害是？", opts:["引起过敏","生成致癌物亚硝胺","破坏维生素","影响矿物质吸收"], ans:1 },
+  { q:"冰箱冷藏室的温度一般应保持在？", opts:["-5°C ~ 0°C","0°C ~ 4°C","8°C ~ 12°C","15°C ~ 20°C"], ans:1 },
+  { q:"下列哪种做法符合食品安全原则？", opts:["生熟食品共用砧板","饭菜常温放置过夜","生熟分开存放","反复解冻冷冻肉类"], ans:2 },
+  { q:"食品添加剂使用的基本原则不包括？", opts:["安全性","必要性","适量使用","随意添加"], ans:3 },
+  { q:"沙门氏菌食物中毒的高发食品是？", opts:["新鲜蔬菜","蛋类和禽肉","水果","米饭"], ans:1 },
+  { q:"食品保质期是指在规定贮存条件下保持食品品质的期限，超过保质期的食品？", opts:["一定不能食用","经检验合格可食用","不可再食用","可降价销售"], ans:2 },
+  { q:"下列哪种做法最容易导致交叉污染？", opts:["使用公筷","处理生肉后不洗手直接接触熟食","生熟食品分开放置","定期清洁厨房"], ans:1 },
+  { q:"预防细菌性食物中毒的关键措施是？", opts:["高温长时间加热","控制温度和时间，防止细菌繁殖","大量使用防腐剂","真空包装"], ans:1 },
+  { q:"有机食品的标志颜色通常为？", opts:["红色","蓝色","绿色","黄色"], ans:2 },
+
+  // ── 社区营养与营养教育 (86-100) ──
+  { q:"BMI（体质指数）的计算公式是？", opts:["体重(kg)/身高(cm)","体重(kg)/身高(m)²","身高(m)/体重(kg)","体重(g)/身高(cm)"], ans:1 },
+  { q:"中国成人BMI正常范围是？", opts:["<18.5","18.5-23.9","24-27.9","≥28"], ans:1 },
+  { q:"营养调查常用的方法不包括？", opts:["膳食调查","体格测量","基因检测","实验室检查"], ans:2 },
+  { q:"24小时膳食回顾法的优点是？", opts:["完全准确","简便快捷，受访者负担小","不需要回忆","可长期追踪"], ans:1 },
+  { q:"社区营养干预的首要步骤是？", opts:["直接实施干预","进行营养状况评估和需求分析","购买营养品","发放宣传单"], ans:1 },
+  { q:"中国居民营养与健康状况监测的频率约为？", opts:["每年一次","每2-3年一次","每5-10年一次","每20年一次"], ans:2 },
+  { q:"下列关于腰围的说法正确的是？", opts:["腰围越大越好","男性腰围≥90cm属于中心性肥胖","女性腰围≥75cm属于中心性肥胖","腰围与健康无关"], ans:1 },
+  { q:"营养标签中的NRV%代表？", opts:["营养素含量","营养素参考值百分比","每日推荐摄入量","净含量"], ans:1 },
+  { q:"进行营养教育时最重要的原则是？", opts:["内容深奥专业","针对性强、通俗易懂","一次性灌输大量信息","不需要考虑文化背景"], ans:1 },
+  { q:"食品交换份法中将食物分为几大类？", opts:["2类","4类","6类","8类"], ans:1 },
+  { q:"评价蛋白质营养价值的常用指标不包括？", opts:["生物价(BV)","蛋白质功效比值(PER)","血糖生成指数(GI)","氨基酸评分(AAS)"], ans:2 },
+  { q:"体重不足（BMI<18.5）可能增加的健康风险是？", opts:["感染风险增加","心血管疾病风险增加","糖尿病风险增加","痛风风险增加"], ans:0 },
+  { q:"膳食调查中称重法的优点是？", opts:["省时省力","精确度高","不需要配合","适合大规模调查"], ans:1 },
+  { q:"营养干预效果评价的指标不包括？", opts:["生化指标变化","知识态度行为改变","经济收入变化","体格指标变化"], ans:2 },
+  { q:"下列哪项属于公共营养师的主要工作内容？", opts:["诊断和治疗疾病","进行营养教育和膳食指导","开具处方药","进行手术"], ans:1 }
+];
+
+// ═══════════════ STATE ═══════════════
+const TOTAL_TIME = 120 * 60; // 120 minutes
+let state = {
+  studentName: '',
+  studentId: '',
+  answers: new Array(100).fill(-1),
+  currentIndex: 0,
+  timeLeft: TOTAL_TIME,
+  timerInterval: null,
+  startTime: null,
+  submitted: false
+};
+
+// ═══════════════ DOM REFS ═══════════════
+const $ = id => document.getElementById(id);
+const pageLogin = $('page-login');
+const pageExam = $('page-exam');
+const pageResults = $('page-results');
+
+// ═══════════════ NAVIGATION ═══════════════
+function showPage(page) {
+  [pageLogin, pageExam, pageResults].forEach(p => p.classList.remove('active'));
+  page.classList.add('active');
+}
+
+// ═══════════════ TOAST ═══════════════
+let toastTimer;
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ═══════════════ LOGIN & START ═══════════════
+function validateId(id) {
+  if (id.length !== 18) return false;
+  const weights = [7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2];
+  const checkCodes = '10X98765432';
+  let sum = 0;
+  for (let i = 0; i < 17; i++) {
+    if (isNaN(parseInt(id[i]))) return false;
+    sum += parseInt(id[i]) * weights[i];
+  }
+  const expected = checkCodes[sum % 11];
+  const actual = id[17].toUpperCase();
+  return expected === actual;
+}
+
+function startExam() {
+  const nameInput = $('inputName');
+  const idInput = $('inputId');
+  const errName = $('errName');
+  const errId = $('errId');
+  let valid = true;
+
+  const name = nameInput.value.trim();
+  if (!name) {
+    errName.classList.add('show');
+    nameInput.classList.add('error');
+    valid = false;
+  } else {
+    errName.classList.remove('show');
+    nameInput.classList.remove('error');
+  }
+
+  const id = idInput.value.trim();
+  if (!id || !validateId(id)) {
+    errId.classList.add('show');
+    idInput.classList.add('error');
+    valid = false;
+  } else {
+    errId.classList.remove('show');
+    idInput.classList.remove('error');
+  }
+
+  if (!valid) return;
+
+  state.studentName = name;
+  state.studentId = id;
+  state.answers = new Array(100).fill(-1);
+  state.currentIndex = 0;
+  state.timeLeft = TOTAL_TIME;
+  state.submitted = false;
+  state.startTime = Date.now();
+
+  showPage(pageExam);
+  renderQuestion();
+  renderQuestionGrid();
+  startTimer();
+  updateProgress();
+  updateNavButtons();
+}
+
+// ═══════════════ TIMER ═══════════════
+function startTimer() {
+  clearInterval(state.timerInterval);
+  updateTimerDisplay();
+  state.timerInterval = setInterval(() => {
+    state.timeLeft--;
+    updateTimerDisplay();
+    if (state.timeLeft <= 0) {
+      clearInterval(state.timerInterval);
+      showToast('⏰ 考试时间到，系统将自动交卷');
+      setTimeout(submitExam, 1500);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const mins = Math.floor(state.timeLeft / 60);
+  const secs = state.timeLeft % 60;
+  const display = $('timerDisplay');
+  display.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+
+  display.classList.remove('warning', 'danger');
+  const pct = state.timeLeft / TOTAL_TIME;
+  const ring = $('timerRing');
+  ring.style.strokeDashoffset = 138.23 * (1 - pct);
+  $('timerPercent').textContent = Math.round(pct * 100) + '%';
+
+  ring.classList.remove('warning', 'danger');
+  if (pct < 0.1) {
+    display.classList.add('danger');
+    ring.classList.add('danger');
+  } else if (pct < 0.25) {
+    display.classList.add('warning');
+    ring.classList.add('warning');
+  }
+}
+
+// ═══════════════ PROGRESS ═══════════════
+function updateProgress() {
+  const answered = state.answers.filter(a => a >= 0).length;
+  const pct = (answered / 100) * 100;
+  $('progressFill').style.width = pct + '%';
+}
+
+// ═══════════════ RENDER QUESTION ═══════════════
+function renderQuestion() {
+  const idx = state.currentIndex;
+  const q = QUESTIONS[idx];
+  $('qNumber').textContent = `第 ${idx + 1} 题`;
+  $('qText').textContent = q.q;
+
+  const letters = ['A','B','C','D'];
+  const container = $('optionsList');
+  container.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option-item' + (state.answers[idx] === i ? ' selected' : '');
+    div.innerHTML = `<span class="option-letter">${letters[i]}</span><span class="option-text">${opt}</span>`;
+    div.addEventListener('click', () => selectOption(idx, i));
+    container.appendChild(div);
+  });
+
+  updateNavButtons();
+  updateProgress();
+  renderQuestionGrid();
+}
+
+function selectOption(qIdx, optIdx) {
+  if (state.submitted) return;
+  state.answers[qIdx] = optIdx;
+  // Re-render just the selected state
+  const items = $('optionsList').children;
+  for (let i = 0; i < items.length; i++) {
+    items[i].classList.toggle('selected', i === optIdx);
+  }
+  updateProgress();
+  renderQuestionGrid();
+}
+
+// ═══════════════ NAVIGATION ═══════════════
+function nextQuestion() {
+  if (state.currentIndex < 99) {
+    state.currentIndex++;
+    renderQuestion();
+  }
+}
+
+function prevQuestion() {
+  if (state.currentIndex > 0) {
+    state.currentIndex--;
+    renderQuestion();
+  }
+}
+
+function updateNavButtons() {
+  $('btnPrev').style.visibility = state.currentIndex === 0 ? 'hidden' : 'visible';
+  $('btnNext').style.visibility = state.currentIndex === 99 ? 'hidden' : 'visible';
+}
+
+// ═══════════════ QUESTION GRID ═══════════════
+function renderQuestionGrid() {
+  const grid = $('questionGrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 100; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'grid-dot';
+    if (state.answers[i] >= 0) dot.classList.add('answered');
+    if (i === state.currentIndex) dot.classList.add('current');
+    dot.textContent = i + 1;
+    dot.addEventListener('click', () => {
+      state.currentIndex = i;
+      renderQuestion();
+      // On mobile, scroll to question area
+      document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+    });
+    grid.appendChild(dot);
+  }
+}
+
+let gridOpen = false;
+function toggleGrid() {
+  gridOpen = !gridOpen;
+  const grid = $('questionGrid');
+  const icon = $('gridToggleIcon');
+  const text = $('gridToggleText');
+  if (gridOpen) {
+    grid.classList.add('open');
+    icon.textContent = '🔼';
+    text.textContent = '收起答题卡';
+  } else {
+    grid.classList.remove('open');
+    icon.textContent = '📋';
+    text.textContent = '答题卡';
+  }
+}
+
+// ═══════════════ SUBMIT ═══════════════
+function showSubmitConfirm() {
+  const answered = state.answers.filter(a => a >= 0).length;
+  const unanswered = 100 - answered;
+  let desc = `您已完成 ${answered} 题，`;
+  if (unanswered > 0) {
+    desc += `还有 <strong style="color:#ef4444;">${unanswered}</strong> 题未作答。`;
+  } else {
+    desc += '所有题目均已作答。';
+  }
+  desc += '<br>交卷后将无法修改，确定要交卷吗？';
+  $('modalDesc').innerHTML = desc;
+  $('submitModal').classList.add('show');
+}
+
+function hideSubmitConfirm() {
+  $('submitModal').classList.remove('show');
+}
+
+function submitExam() {
+  clearInterval(state.timerInterval);
+  state.submitted = true;
+  hideSubmitConfirm();
+
+  const totalTimeSec = TOTAL_TIME - state.timeLeft;
+  const totalMin = Math.floor(totalTimeSec / 60);
+  const totalSec = totalTimeSec % 60;
+
+  let correct = 0;
+  let wrong = 0;
+  let unanswered = 0;
+  for (let i = 0; i < 100; i++) {
+    if (state.answers[i] < 0) {
+      unanswered++;
+    } else if (state.answers[i] === QUESTIONS[i].ans) {
+      correct++;
+    } else {
+      wrong++;
+    }
+  }
+
+  const score = correct; // 每题1分，满分100分
+  const passed = score >= 60;
+
+  $('resultIcon').textContent = passed ? '🎉' : '😞';
+  const scoreEl = $('resultScore');
+  scoreEl.textContent = score;
+  scoreEl.className = 'result-score' + (passed ? '' : ' fail');
+  const gradeEl = $('resultGrade');
+  gradeEl.textContent = passed ? '✅ 成绩合格' : '❌ 成绩不合格';
+  gradeEl.className = 'result-grade ' + (passed ? 'pass' : 'fail');
+  $('statCorrect').textContent = correct;
+  $('statWrong').textContent = wrong;
+  $('statUnanswered').textContent = unanswered;
+  $('resultTime').textContent = `⏱️ 用时：${totalMin} 分 ${totalSec} 秒`;
+
+  showPage(pageResults);
+
+  // Scroll to top for results
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restartExam() {
+  clearInterval(state.timerInterval);
+  state.answers = new Array(100).fill(-1);
+  state.currentIndex = 0;
+  state.timeLeft = TOTAL_TIME;
+  state.submitted = false;
+  state.studentName = '';
+  state.studentId = '';
+  $('inputName').value = '';
+  $('inputId').value = '';
+  $('errName').classList.remove('show');
+  $('inputName').classList.remove('error');
+  $('errId').classList.remove('show');
+  $('inputId').classList.remove('error');
+  gridOpen = false;
+  $('questionGrid').classList.remove('open');
+  $('gridToggleIcon').textContent = '📋';
+  $('gridToggleText').textContent = '答题卡';
+  showPage(pageLogin);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════════════ KEYBOARD SHORTCUTS ═══════════════
+document.addEventListener('keydown', (e) => {
+  if (state.submitted) return;
+  if (!pageExam.classList.contains('active')) return;
+  const idx = state.currentIndex;
+  switch(e.key.toLowerCase()) {
+    case 'a': selectOption(idx, 0); break;
+    case 'b': selectOption(idx, 1); break;
+    case 'c': selectOption(idx, 2); break;
+    case 'd': selectOption(idx, 3); break;
+    case 'arrowleft': prevQuestion(); e.preventDefault(); break;
+    case 'arrowright': nextQuestion(); e.preventDefault(); break;
+  }
+});
+
+// ═══════════════ PREVENT ACCIDENTAL CLOSE ═══════════════
+window.addEventListener('beforeunload', (e) => {
+  if (!state.submitted && pageExam.classList.contains('active')) {
+    e.preventDefault();
+    e.returnValue = '考试正在进行中，确定要离开吗？';
+  }
+});
+</script>
+
+</body>
+</html>
