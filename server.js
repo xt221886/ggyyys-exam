@@ -19,7 +19,7 @@ function saveData() {
 const server = http.createServer((req, res) => {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
@@ -49,6 +49,16 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ error: 'Invalid JSON' }));
       }
     });
+    return;
+  }
+
+  if (req.method === 'DELETE' && req.url.startsWith('/results/')) {
+    const ts = parseInt(req.url.split('/results/')[1]);
+    const before = data.results.length;
+    data.results = data.results.filter(r => r.timestamp !== ts);
+    saveData();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, deleted: before - data.results.length }));
     return;
   }
 

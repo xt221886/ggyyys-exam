@@ -130,7 +130,7 @@ tr:hover td{background:#f0fdf4}
       <table>
         <thead>
           <tr>
-            <th>#</th><th>姓名</th><th>身份证号</th><th>得分</th><th>合格</th><th>正确</th><th>错误</th><th>未答</th><th>用时</th><th>提交时间</th><th>详情</th>
+            <th>#</th><th>姓名</th><th>身份证号</th><th>得分</th><th>合格</th><th>正确</th><th>错误</th><th>未答</th><th>用时</th><th>提交时间</th><th>详情</th><th>操作</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -201,6 +201,29 @@ async function refreshData() {
   await loadData();
 }
 
+async function deleteResult(timestamp) {
+  if (!confirm('确定要删除这条答题记录吗？此操作不可恢复。')) return;
+  try {
+    const res = await fetch(API_URL + '/' + timestamp, { method: 'DELETE' });
+    if (res.ok) {
+      showToast('✅ 已删除');
+      await loadData();
+    } else {
+      showToast('❌ 删除失败');
+    }
+  } catch (e) {
+    showToast('❌ 网络错误');
+  }
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 24px;border-radius:99px;font-size:.85rem;font-weight:600;z-index:999;animation:fadeIn .3s ease';
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 2000);
+}
+
 // ═══════════ STATS ═══════════
 function updateStats() {
   const n = allResults.length;
@@ -253,6 +276,7 @@ function renderTable() {
       <td>${r.timeDisplay || '—'}</td>
       <td style="font-size:.78rem;white-space:nowrap">${r.submittedAt || '—'}</td>
       <td><span class="clickable" onclick="showDetail(${allResults.indexOf(r)})">查看</span></td>
+      <td><span class="clickable" style="color:#ef4444" onclick="deleteResult(${r.timestamp})">删除</span></td>
     </tr>
   `).join('');
 }
