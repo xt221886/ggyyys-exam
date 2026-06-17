@@ -152,7 +152,7 @@ tr:hover td{background:#f0fdf4}
 
 <script>
 const ADMIN_PWD = 'admin888';
-const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019ed58a-ab18-72a2-a934-4990005c8e65';
+const API_URL = 'https://2d31d8040531cd3b-117-152-147-122.serveousercontent.com/results';
 
 let allResults = [];
 
@@ -176,7 +176,7 @@ async function loadData() {
   allResults = [];
 
   try {
-    const res = await fetch(BLOB_URL);
+    const res = await fetch(API_URL);
     if (res.ok) {
       const data = await res.json();
       allResults = data.results || [];

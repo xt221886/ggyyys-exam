@@ -1106,21 +1106,18 @@ function submitExam() {
 }
 
 async function saveResult(result) {
-  const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019ed58a-ab18-72a2-a934-4990005c8e65';
+  const API_URL = 'https://2d31d8040531cd3b-117-152-147-122.serveousercontent.com/results';
   try {
-    // Get current results
-    const getRes = await fetch(BLOB_URL);
-    const data = await getRes.json();
-    const results = data.results || [];
-    results.push(result);
-
-    // Update blob
-    await fetch(BLOB_URL, {
-      method: 'PUT',
+    const res = await fetch(API_URL, {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ results: results })
+      body: JSON.stringify(result)
     });
-    console.log('✅ 成绩已保存');
+    if (res.ok) {
+      console.log('✅ 成绩已保存');
+    } else {
+      throw new Error('Save failed');
+    }
   } catch (e) {
     console.warn('⚠️ 保存失败，已存入本地备份');
     fallbackStore(result);
