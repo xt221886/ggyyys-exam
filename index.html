@@ -1111,7 +1111,7 @@ async function saveResult(result) {
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': '1' },
       body: JSON.stringify(result)
     });
     if (res.ok) {
