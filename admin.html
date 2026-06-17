@@ -152,7 +152,7 @@ tr:hover td{background:#f0fdf4}
 
 <script>
 const ADMIN_PWD = 'admin888';
-const API_URL = 'https://2d31d8040531cd3b-117-152-147-122.serveousercontent.com/results';
+const API_URL = 'https://ggyyys-exam.vercel.app/results';
 const EXAM_TYPE = '公共营养师';
 
 let allResults = [];
@@ -205,7 +205,7 @@ async function refreshData() {
 async function deleteResult(timestamp) {
   if (!confirm('确定要删除这条答题记录吗？此操作不可恢复。')) return;
   try {
-    const res = await fetch(API_URL + '/' + timestamp, { method: 'DELETE' });
+    const res = await fetch(API_URL + '?timestamp=' + timestamp, { method: 'DELETE' });
     if (res.ok) {
       showToast('✅ 已删除');
       await loadData();
