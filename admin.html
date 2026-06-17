@@ -152,8 +152,7 @@ tr:hover td{background:#f0fdf4}
 
 <script>
 const ADMIN_PWD = 'admin888';
-const TOKEN = String.fromCharCode(0x67,0x68,0x6f,0x5f,0x77,0x57,0x70,0x56,0x31,0x43,0x41,0x6a,0x37,0x5a,0x34,0x4a,0x4d,0x6a,0x6b,0x45,0x31,0x44,0x4b,0x51,0x36,0x52,0x39,0x71,0x35,0x52,0x57,0x77,0x63,0x6b,0x33,0x6b,0x39,0x50,0x6a,0x4d);
-const REPO = 'xt221886/ggyyys-exam';
+const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019ed58a-ab18-72a2-a934-4990005c8e65';
 
 let allResults = [];
 
@@ -176,32 +175,13 @@ async function loadData() {
   document.getElementById('emptyState').style.display = 'none';
   allResults = [];
 
-  // Try GitHub API first
   try {
-    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/results?ref=main`, {
-      headers: { 'Authorization': `token ${TOKEN}` }
-    });
+    const res = await fetch(BLOB_URL);
     if (res.ok) {
-      const files = await res.json();
-      for (const f of files) {
-        try {
-          const fr = await fetch(f.download_url || f.git_url);
-          const data = await (fr.ok ? fr.json() : fetch(f.url, { headers: { 'Authorization': `token ${TOKEN}`, 'Accept': 'application/vnd.github.v3.raw' } }).then(r => r.json()));
-          allResults.push(data);
-        } catch (e) { /* skip corrupted files */ }
-      }
+      const data = await res.json();
+      allResults = data.results || [];
     }
   } catch (e) { /* offline */ }
-
-  // Merge local backups
-  try {
-    const backup = JSON.parse(localStorage.getItem('exam_backup') || '[]');
-    for (const b of backup) {
-      if (!allResults.find(r => r.timestamp === b.timestamp)) {
-        allResults.push(b);
-      }
-    }
-  } catch (e) {}
 
   // Sort by time desc
   allResults.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));

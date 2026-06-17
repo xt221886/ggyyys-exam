@@ -1106,31 +1106,23 @@ function submitExam() {
 }
 
 async function saveResult(result) {
-  const TOKEN = String.fromCharCode(0x67,0x68,0x6f,0x5f,0x77,0x57,0x70,0x56,0x31,0x43,0x41,0x6a,0x37,0x5a,0x34,0x4a,0x4d,0x6a,0x6b,0x45,0x31,0x44,0x4b,0x51,0x36,0x52,0x39,0x71,0x35,0x52,0x57,0x77,0x63,0x6b,0x33,0x6b,0x39,0x50,0x6a,0x4d);
-  const REPO = 'xt221886/ggyyys-exam';
-  const ts = new Date().toISOString().replace(/[:.]/g, '-');
-  const filename = `results/${ts}_${result.name}.json`;
-
+  const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019ed58a-ab18-72a2-a934-4990005c8e65';
   try {
-    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${encodeURIComponent(filename)}`, {
+    // Get current results
+    const getRes = await fetch(BLOB_URL);
+    const data = await getRes.json();
+    const results = data.results || [];
+    results.push(result);
+
+    // Update blob
+    await fetch(BLOB_URL, {
       method: 'PUT',
-      headers: {
-        'Authorization': `token ${TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: `答题记录: ${result.name} - ${result.score}分`,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(result, null, 2))))
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ results: results })
     });
-    if (res.ok) {
-      console.log('✅ 成绩已保存');
-    } else {
-      console.warn('⚠️ 保存失败，已存入本地备份');
-      fallbackStore(result);
-    }
+    console.log('✅ 成绩已保存');
   } catch (e) {
-    console.warn('⚠️ 网络错误，已存入本地备份');
+    console.warn('⚠️ 保存失败，已存入本地备份');
     fallbackStore(result);
   }
 }
