@@ -160,7 +160,7 @@ let allResults = [];
 function login() {
   const pwd = document.getElementById('pwdInput').value;
   if (pwd === ADMIN_PWD) {
-    document.getElementById('loginWrap').classList.remove('active');
+    document.getElementById('loginWrap').style.display = 'none';
     document.getElementById('dashboard').classList.add('active');
     document.getElementById('loginErr').style.display = 'none';
     loadData();
