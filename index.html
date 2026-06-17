@@ -658,32 +658,19 @@ body::after {
     </div>
   </div>
 
-  <!-- ═══════════ PAGE 3: RESULTS ═══════════ -->
+  <!-- ═══════════ PAGE 3: SUBMITTED ═══════════ -->
   <div class="page centered" id="page-results">
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
       <div class="card" style="text-align:center;">
-        <div class="result-icon" id="resultIcon"></div>
-        <div class="result-score" id="resultScore"></div>
-        <div class="result-label">总得分（满分 100 分）</div>
-        <div style="margin-top:8px;">
-          <span class="result-grade" id="resultGrade"></span>
+        <div style="font-size:64px;margin-bottom:12px;" id="resultIcon">✅</div>
+        <div style="font-size:1.3rem;font-weight:700;color:#166534;margin-bottom:4px;">考试已提交</div>
+        <div style="font-size:.9rem;color:#64748b;margin-bottom:20px;" id="resultMsg">您的答卷已成功提交，成绩将在后台审核后公布。</div>
+        <div style="background:#f0fdf4;border-radius:12px;padding:16px;margin-bottom:16px;text-align:left;font-size:.82rem;color:#475569;line-height:1.6;">
+          📋 <strong>考生信息</strong><br>
+          <span id="submittedName" style="color:#94a3b8;">—</span><br>
+          ⏱️ <span id="submittedTime" style="color:#94a3b8;">—</span>
         </div>
-        <div class="result-stats">
-          <div class="result-stat">
-            <div class="result-stat-val" id="statCorrect">0</div>
-            <div class="result-stat-label">✅ 正确</div>
-          </div>
-          <div class="result-stat">
-            <div class="result-stat-val" id="statWrong">0</div>
-            <div class="result-stat-label">❌ 错误</div>
-          </div>
-          <div class="result-stat">
-            <div class="result-stat-val" id="statUnanswered">0</div>
-            <div class="result-stat-label">⬜ 未答</div>
-          </div>
-        </div>
-        <div style="margin-top:16px;font-size:.85rem;color:var(--slate-500);" id="resultTime"></div>
-        <button class="btn btn-primary" style="margin-top:20px;" onclick="restartExam()">🔄 重新考试</button>
+        <button class="btn btn-primary" style="margin-top:4px;" onclick="restartExam()">🔄 重新考试</button>
       </div>
     </div>
     <div class="app-footer">公共营养师在线考试系统 © 2026</div>
@@ -1086,38 +1073,72 @@ function submitExam() {
   const totalMin = Math.floor(totalTimeSec / 60);
   const totalSec = totalTimeSec % 60;
 
-  let correct = 0;
-  let wrong = 0;
-  let unanswered = 0;
+  let correct = 0, wrong = 0, unanswered = 0;
   for (let i = 0; i < 100; i++) {
-    if (state.answers[i] < 0) {
-      unanswered++;
-    } else if (state.answers[i] === QUESTIONS[i].ans) {
-      correct++;
-    } else {
-      wrong++;
-    }
+    if (state.answers[i] < 0) unanswered++;
+    else if (state.answers[i] === QUESTIONS[i].ans) correct++;
+    else wrong++;
   }
 
-  const score = correct; // 每题1分，满分100分
-  const passed = score >= 60;
+  const result = {
+    name: state.studentName,
+    id: state.studentId.substring(0, 4) + '****' + state.studentId.substring(14),
+    idFull: state.studentId,
+    score: correct,
+    correct: correct,
+    wrong: wrong,
+    unanswered: unanswered,
+    answers: state.answers,
+    timeUsed: totalTimeSec,
+    timeDisplay: `${totalMin}分${totalSec}秒`,
+    submittedAt: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
+    timestamp: Date.now()
+  };
 
-  $('resultIcon').textContent = passed ? '🎉' : '😞';
-  const scoreEl = $('resultScore');
-  scoreEl.textContent = score;
-  scoreEl.className = 'result-score' + (passed ? '' : ' fail');
-  const gradeEl = $('resultGrade');
-  gradeEl.textContent = passed ? '✅ 成绩合格' : '❌ 成绩不合格';
-  gradeEl.className = 'result-grade ' + (passed ? 'pass' : 'fail');
-  $('statCorrect').textContent = correct;
-  $('statWrong').textContent = wrong;
-  $('statUnanswered').textContent = unanswered;
-  $('resultTime').textContent = `⏱️ 用时：${totalMin} 分 ${totalSec} 秒`;
-
+  // Show submitted page
+  $('submittedName').textContent = '姓名：' + result.name;
+  $('submittedTime').textContent = '用时：' + result.timeDisplay;
   showPage(pageResults);
-
-  // Scroll to top for results
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Save to GitHub
+  saveResult(result);
+}
+
+async function saveResult(result) {
+  const TOKEN = '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';
+  const REPO = 'xt221886/ggyyys-exam';
+  const ts = new Date().toISOString().replace(/[:.]/g, '-');
+  const filename = `results/${ts}_${result.name}.json`;
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${encodeURIComponent(filename)}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: `答题记录: ${result.name} - ${result.score}分`,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(result, null, 2))))
+      })
+    });
+    if (res.ok) {
+      console.log('✅ 成绩已保存');
+    } else {
+      console.warn('⚠️ 保存失败，已存入本地备份');
+      fallbackStore(result);
+    }
+  } catch (e) {
+    console.warn('⚠️ 网络错误，已存入本地备份');
+    fallbackStore(result);
+  }
+}
+
+function fallbackStore(result) {
+  const backup = JSON.parse(localStorage.getItem('exam_backup') || '[]');
+  backup.push(result);
+  localStorage.setItem('exam_backup', JSON.stringify(backup));
 }
 
 function restartExam() {

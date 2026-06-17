@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理后台 - 公共营养师在线考试</title>
+<style>
+:root {
+  --green-600: #16a34a; --green-700: #15803d;
+  --red-500: #ef4444; --red-600: #dc2626;
+  --amber-500: #f59e0b;
+  --slate-50: #f8fafc; --slate-100: #f1f5f9; --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1; --slate-400: #94a3b8; --slate-500: #64748b;
+  --slate-600: #475569; --slate-700: #334155; --slate-800: #1e293b; --slate-900: #0f172a;
+  --white: #fff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f0f9f1;color:var(--slate-800);min-height:100vh;line-height:1.6}
+
+/* ── Login ── */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-card{background:var(--white);border-radius:16px;padding:36px 28px;max-width:380px;width:100%;text-align:center;box-shadow:0 12px 32px rgba(0,0,0,.1)}
+.login-card h1{font-size:1.3rem;color:var(--slate-900);margin-bottom:4px}
+.login-card .sub{font-size:.82rem;color:var(--slate-500);margin-bottom:20px}
+.login-card input{width:100%;height:48px;border:2px solid var(--slate-200);border-radius:10px;padding:0 14px;font-size:1rem;outline:none;transition:all .2s}
+.login-card input:focus{border-color:var(--green-600);box-shadow:0 0 0 3px rgba(22,163,74,.1)}
+.login-card .btn{width:100%;height:48px;margin-top:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:1rem;font-weight:600;cursor:pointer}
+.login-card .err{color:var(--red-500);font-size:.8rem;margin-top:8px;display:none}
+
+/* ── Dashboard ── */
+.dashboard{display:none;max-width:1100px;margin:0 auto;padding:16px}
+.dashboard.active,.login-wrap.active{display:block}
+.header{background:var(--white);border-radius:14px;padding:18px 22px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.header h2{font-size:1.15rem;color:var(--slate-900)}
+.header .badge{font-size:.78rem;background:var(--green-600);color:#fff;padding:4px 12px;border-radius:99px}
+.header .btn-sm{height:36px;padding:0 16px;border:2px solid var(--slate-300);border-radius:8px;background:var(--white);font-size:.82rem;cursor:pointer;color:var(--slate-700)}
+
+/* ── Stats ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.stat-card{background:var(--white);border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.stat-val{font-size:1.6rem;font-weight:700;color:var(--slate-900)}
+.stat-label{font-size:.75rem;color:var(--slate-500);margin-top:2px}
+.stat-card.green .stat-val{color:var(--green-600)}
+.stat-card.red .stat-val{color:var(--red-500)}
+.stat-card.amber .stat-val{color:var(--amber-500)}
+
+/* ── Table ── */
+.table-wrap{background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.table-header{padding:14px 20px;border-bottom:1px solid var(--slate-100);display:flex;justify-content:space-between;align-items:center}
+.table-header h3{font-size:.95rem;color:var(--slate-800)}
+.search-input{height:36px;width:200px;border:1.5px solid var(--slate-200);border-radius:8px;padding:0 10px;font-size:.82rem;outline:none}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:var(--slate-50);padding:10px 12px;text-align:left;font-weight:600;color:var(--slate-600);font-size:.78rem;white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--slate-100)}
+tr:hover td{background:#f0fdf4}
+.pass-badge{display:inline-block;padding:2px 10px;border-radius:99px;font-size:.75rem;font-weight:600}
+.pass-badge.pass{background:#dcfce7;color:var(--green-700)}
+.pass-badge.fail{background:#fef2f2;color:var(--red-600)}
+.clickable{color:var(--green-700);cursor:pointer;text-decoration:underline}
+
+/* ── Detail Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:var(--white);border-radius:16px;padding:24px;max-width:700px;width:100%;max-height:80vh;overflow-y:auto}
+.modal-box h3{font-size:1.1rem;margin-bottom:12px}
+.modal-close{float:right;background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--slate-500)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;font-size:.85rem}
+.detail-grid dt{color:var(--slate-500)} .detail-grid dd{font-weight:600}
+.answer-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.answer-dot{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:.7rem;font-weight:700}
+.answer-dot.correct{background:#dcfce7;color:var(--green-700)}
+.answer-dot.wrong{background:#fef2f2;color:var(--red-600)}
+.answer-dot.empty{background:var(--slate-100);color:var(--slate-400)}
+
+/* ── Loading ── */
+.loading{text-align:center;padding:40px;color:var(--slate-500)}
+.spinner{display:inline-block;width:36px;height:36px;border:3px solid var(--slate-200);border-top-color:var(--green-600);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-state{text-align:center;padding:48px 20px;color:var(--slate-400)}
+.empty-state .icon{font-size:48px;margin-bottom:8px}
+
+.export-bar{padding:12px 20px;border-top:1px solid var(--slate-100);display:flex;gap:8px}
+.export-bar .btn-sm{height:34px;padding:0 14px;border:1.5px solid var(--slate-300);border-radius:8px;background:var(--white);font-size:.8rem;cursor:pointer}
+.export-bar .btn-sm.primary{background:var(--green-600);color:#fff;border-color:var(--green-600)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div class="login-wrap active" id="loginWrap">
+  <div class="login-card">
+    <div style="font-size:40px">🔐</div>
+    <h1>管理后台</h1>
+    <p class="sub">公共营养师在线考试系统</p>
+    <input type="password" id="pwdInput" placeholder="请输入管理密码" onkeydown="if(event.key==='Enter')login()">
+    <button class="btn" onclick="login()">登 录</button>
+    <div class="err" id="loginErr">密码错误</div>
+  </div>
+</div>
+
+<!-- ═══════════ DASHBOARD ═══════════ -->
+<div class="dashboard" id="dashboard">
+  <div class="header">
+    <div>
+      <h2>📊 答题记录管理</h2>
+      <span style="font-size:.78rem;color:var(--slate-500)">公共营养师在线考试</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="badge" id="recordCount">0 条记录</span>
+      <button class="btn-sm" onclick="refreshData()">🔄 刷新</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card"><div class="stat-val" id="statTotal">0</div><div class="stat-label">📝 总考生数</div></div>
+    <div class="stat-card green"><div class="stat-val" id="statAvg">—</div><div class="stat-label">📊 平均分</div></div>
+    <div class="stat-card green"><div class="stat-val" id="statPass">0</div><div class="stat-label">✅ 合格人数</div></div>
+    <div class="stat-card red"><div class="stat-val" id="statFail">0</div><div class="stat-label">❌ 不合格人数</div></div>
+    <div class="stat-card"><div class="stat-val" id="statMax">—</div><div class="stat-label">🏆 最高分</div></div>
+    <div class="stat-card"><div class="stat-val" id="statMin">—</div><div class="stat-label">📉 最低分</div></div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <h3>📋 答题记录</h3>
+      <input class="search-input" id="searchInput" placeholder="🔍 搜索姓名…" oninput="renderTable()">
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>姓名</th><th>身份证号</th><th>得分</th><th>合格</th><th>正确</th><th>错误</th><th>未答</th><th>用时</th><th>提交时间</th><th>详情</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="loading" id="loading"><div class="spinner"></div><p style="margin-top:8px">加载中…</p></div>
+    <div class="empty-state" id="emptyState" style="display:none"><div class="icon">📭</div><p>暂无答题记录</p></div>
+    <div class="export-bar">
+      <button class="btn-sm primary" onclick="exportCSV()">📥 导出 CSV</button>
+      <button class="btn-sm" onclick="refreshData()">🔄 强制刷新</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detailModal" style="display:none" onclick="if(event.target===this)closeDetail()">
+  <div class="modal-box" id="detailContent"></div>
+</div>
+
+<script>
+const ADMIN_PWD = 'ggyyys2026';
+const TOKEN = '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';
+const REPO = 'xt221886/ggyyys-exam';
+
+let allResults = [];
+
+// ═══════════ LOGIN ═══════════
+function login() {
+  const pwd = document.getElementById('pwdInput').value;
+  if (pwd === ADMIN_PWD) {
+    document.getElementById('loginWrap').classList.remove('active');
+    document.getElementById('dashboard').classList.add('active');
+    document.getElementById('loginErr').style.display = 'none';
+    loadData();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+
+// ═══════════ LOAD DATA ═══════════
+async function loadData() {
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('emptyState').style.display = 'none';
+  allResults = [];
+
+  // Try GitHub API first
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/results?ref=main`, {
+      headers: { 'Authorization': `token ${TOKEN}` }
+    });
+    if (res.ok) {
+      const files = await res.json();
+      for (const f of files) {
+        try {
+          const fr = await fetch(f.download_url || f.git_url);
+          const data = await (fr.ok ? fr.json() : fetch(f.url, { headers: { 'Authorization': `token ${TOKEN}`, 'Accept': 'application/vnd.github.v3.raw' } }).then(r => r.json()));
+          allResults.push(data);
+        } catch (e) { /* skip corrupted files */ }
+      }
+    }
+  } catch (e) { /* offline */ }
+
+  // Merge local backups
+  try {
+    const backup = JSON.parse(localStorage.getItem('exam_backup') || '[]');
+    for (const b of backup) {
+      if (!allResults.find(r => r.timestamp === b.timestamp)) {
+        allResults.push(b);
+      }
+    }
+  } catch (e) {}
+
+  // Sort by time desc
+  allResults.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+  document.getElementById('loading').style.display = 'none';
+  if (allResults.length === 0) {
+    document.getElementById('emptyState').style.display = 'block';
+  }
+
+  updateStats();
+  renderTable();
+}
+
+async function refreshData() {
+  // Clear cache and reload
+  allResults = [];
+  await loadData();
+}
+
+// ═══════════ STATS ═══════════
+function updateStats() {
+  const n = allResults.length;
+  document.getElementById('recordCount').textContent = n + ' 条记录';
+  document.getElementById('statTotal').textContent = n;
+
+  if (n === 0) {
+    document.getElementById('statAvg').textContent = '—';
+    document.getElementById('statMax').textContent = '—';
+    document.getElementById('statMin').textContent = '—';
+    document.getElementById('statPass').textContent = '0';
+    document.getElementById('statFail').textContent = '0';
+    return;
+  }
+
+  const scores = allResults.map(r => r.score);
+  const avg = Math.round(scores.reduce((a, b) => a + b, 0) / n);
+  const max = Math.max(...scores);
+  const min = Math.min(...scores);
+  const passCount = scores.filter(s => s >= 60).length;
+
+  document.getElementById('statAvg').textContent = avg;
+  document.getElementById('statMax').textContent = max;
+  document.getElementById('statMin').textContent = min;
+  document.getElementById('statPass').textContent = passCount;
+  document.getElementById('statFail').textContent = n - passCount;
+}
+
+// ═══════════ TABLE ═══════════
+function renderTable() {
+  const search = (document.getElementById('searchInput').value || '').toLowerCase();
+  const filtered = search ? allResults.filter(r => r.name.toLowerCase().includes(search)) : allResults;
+  const tbody = document.getElementById('tableBody');
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--slate-400);padding:32px">无匹配记录</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map((r, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td><strong>${esc(r.name)}</strong></td>
+      <td style="font-family:monospace;font-size:.78rem">${esc(r.id || r.idFull || '—')}</td>
+      <td><strong style="color:${r.score >= 60 ? 'var(--green-600)' : 'var(--red-500)'}">${r.score}</strong></td>
+      <td><span class="pass-badge ${r.score >= 60 ? 'pass' : 'fail'}">${r.score >= 60 ? '合格' : '不合格'}</span></td>
+      <td style="color:var(--green-600)">${r.correct || 0}</td>
+      <td style="color:var(--red-500)">${r.wrong || 0}</td>
+      <td style="color:var(--slate-400)">${r.unanswered || 0}</td>
+      <td>${r.timeDisplay || '—'}</td>
+      <td style="font-size:.78rem;white-space:nowrap">${r.submittedAt || '—'}</td>
+      <td><span class="clickable" onclick="showDetail(${allResults.indexOf(r)})">查看</span></td>
+    </tr>
+  `).join('');
+}
+
+function esc(s) {
+  if (!s) return '—';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ═══════════ DETAIL MODAL ═══════════
+function showDetail(idx) {
+  const r = allResults[idx];
+  if (!r) return;
+
+  const answers = r.answers || [];
+  const letters = ['A','B','C','D'];
+
+  let answersHtml = '';
+  if (answers.length > 0) {
+    answersHtml = '<div style="margin-top:12px"><strong>答题详情：</strong><div class="answer-list">';
+    // We don't have per-question answers in stored result currently
+    // Show what we have
+    answersHtml += '</div></div>';
+  }
+
+  document.getElementById('detailContent').innerHTML = `
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <h3>📋 ${esc(r.name)} 的答题记录</h3>
+    <dl class="detail-grid">
+      <dt>姓名</dt><dd>${esc(r.name)}</dd>
+      <dt>身份证号</dt><dd>${esc(r.idFull || r.id || '—')}</dd>
+      <dt>得分</dt><dd style="color:${r.score >= 60 ? 'var(--green-600)' : 'var(--red-500)'};font-size:1.2rem"><strong>${r.score} 分</strong></dd>
+      <dt>合格</dt><dd>${r.score >= 60 ? '✅ 合格' : '❌ 不合格'}</dd>
+      <dt>正确</dt><dd style="color:var(--green-600)">${r.correct || 0} 题</dd>
+      <dt>错误</dt><dd style="color:var(--red-500)">${r.wrong || 0} 题</dd>
+      <dt>未答</dt><dd>${r.unanswered || 0} 题</dd>
+      <dt>用时</dt><dd>${r.timeDisplay || '—'}</dd>
+      <dt>提交时间</dt><dd>${r.submittedAt || '—'}</dd>
+    </dl>
+    ${answersHtml}
+  `;
+  document.getElementById('detailModal').style.display = 'flex';
+}
+
+function closeDetail() {
+  document.getElementById('detailModal').style.display = 'none';
+}
+
+// ═══════════ EXPORT CSV ═══════════
+function exportCSV() {
+  if (allResults.length === 0) { alert('暂无数据可导出'); return; }
+  const headers = ['姓名', '身份证号', '得分', '是否合格', '正确题数', '错误题数', '未答题数', '用时', '提交时间'];
+  const rows = allResults.map(r => [
+    r.name, r.idFull || r.id || '', r.score, r.score >= 60 ? '合格' : '不合格',
+    r.correct || 0, r.wrong || 0, r.unanswered || 0, r.timeDisplay || '', r.submittedAt || ''
+  ]);
+  const csv = '﻿' + headers.join(',') + '\n' + rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `答题记录_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Keyboard shortcut for login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginWrap').classList.contains('active')) {
+    login();
+  }
+});
+</script>
+</body>
+</html>
